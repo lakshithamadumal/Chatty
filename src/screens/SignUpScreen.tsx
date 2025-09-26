@@ -137,7 +137,7 @@ export default function SignUpScreen() {
 
           <View className="mt-10">
             <Pressable
-              onPress={() => navigation.replace("AvatarScreen")}
+              onPress={() => navigation.replace("HomeScreen")}
               className="h-14 rounded-full bg-blue-600 items-center justify-center"
             >
               <Text className="text-white font-semibold">Create Account</Text>
