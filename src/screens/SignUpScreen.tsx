@@ -17,6 +17,7 @@ import { RootStack } from "../../App";
 import { useState } from "react";
 import { useUserRegistration } from "../components/UserContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
 
 type SignupProps = NativeStackNavigationProp<RootStack, "SignUpScreen">;
 
@@ -39,19 +40,50 @@ export default function SignUpScreen() {
           <StatusBar hidden={true} />
 
           <View className="w-full items-start pt-2">
-            <Pressable onPress={() => navigation.goBack()} className="h-10 w-10 items-center justify-center">
-              <AntDesign name="left" size={20} color={applied === "dark" ? "#F1F5F9" : "#0F1828"} />
+            <Pressable
+              onPress={() => navigation.goBack()}
+              className="h-10 w-10 items-center justify-center"
+            >
+              <AntDesign
+                name="left"
+                size={20}
+                color={applied === "dark" ? "#F1F5F9" : "#0F1828"}
+              />
             </Pressable>
           </View>
 
           <View className="items-center mt-8">
-            <Text className="text-xl font-semibold text-slate-800 dark:text-slate-100">Your Profile</Text>
+            <Text className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+              Your Profile
+            </Text>
           </View>
 
           <View className="items-center mt-8">
-            <Pressable className="h-28 w-28 rounded-full items-center justify-center" style={{ backgroundColor: applied === "dark" ? "#152033" : "#F4F6FA", position: "relative" }}>
-              <AntDesign name="user" size={48} color={applied === "dark" ? "#E2E8F0" : "#0F1828"} />
-              <View style={{ position: "absolute", right: 10, bottom: 8, backgroundColor: "#0F1828", width: 22, height: 22, borderRadius: 11, alignItems: "center", justifyContent: "center" }}>
+            <Pressable
+              className="h-28 w-28 rounded-full items-center justify-center"
+              style={{
+                backgroundColor: applied === "dark" ? "#152033" : "#f1f5f9",
+                position: "relative",
+              }}
+            >
+              <Feather
+                name="user"
+                size={48}
+                color={applied === "dark" ? "#E2E8F0" : "#0F1828"}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  right: 10,
+                  bottom: 8,
+                  backgroundColor: "#0F1828",
+                  width: 22,
+                  height: 22,
+                  borderRadius: 11,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <AntDesign name="plus" size={12} color="#FFFFFF" />
               </View>
             </Pressable>
@@ -80,7 +112,7 @@ export default function SignUpScreen() {
               onPress={() => navigation.replace("AvatarScreen")}
               className="h-14 rounded-full bg-blue-600 items-center justify-center"
             >
-              <Text className="text-white font-semibold">Save</Text>
+              <Text className="text-white font-semibold">Create Account</Text>
             </Pressable>
           </View>
         </SafeAreaView>
