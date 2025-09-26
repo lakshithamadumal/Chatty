@@ -6,6 +6,7 @@ import {
   Platform,
   Pressable,
   TextInput,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import "../../global.css";
@@ -18,6 +19,7 @@ import { useState } from "react";
 import { useUserRegistration } from "../components/UserContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
+import * as ImagePicker from "expo-image-picker";
 
 type SignupProps = NativeStackNavigationProp<RootStack, "SignUpScreen">;
 
@@ -29,6 +31,22 @@ export default function SignUpScreen() {
   const { userData, setUserData } = useUserRegistration();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+
+  const [image, setImage] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
 
   return (
     <AlertNotificationRoot>
@@ -65,27 +83,37 @@ export default function SignUpScreen() {
                 backgroundColor: applied === "dark" ? "#152033" : "#f1f5f9",
                 position: "relative",
               }}
+              onPress={pickImage}
             >
-              <Feather
-                name="user"
-                size={48}
-                color={applied === "dark" ? "#E2E8F0" : "#0F1828"}
-              />
-              <View
-                style={{
-                  position: "absolute",
-                  right: 10,
-                  bottom: 8,
-                  backgroundColor: "#0F1828",
-                  width: 22,
-                  height: 22,
-                  borderRadius: 11,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <AntDesign name="plus" size={12} color="#FFFFFF" />
-              </View>
+              {image ? (
+                <Image
+                  source={{ uri: image }}
+                  className="h-[120] w-[120] rounded-full"
+                />
+              ) : (
+                <>
+                  <Feather
+                    name="user"
+                    size={48}
+                    color={applied === "dark" ? "#E2E8F0" : "#0F1828"}
+                  />
+                  <View
+                    style={{
+                      position: "absolute",
+                      right: 10,
+                      bottom: 8,
+                      backgroundColor: "#0F1828",
+                      width: 22,
+                      height: 22,
+                      borderRadius: 11,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <AntDesign name="plus" size={12} color="#FFFFFF" />
+                  </View>
+                </>
+              )}
             </Pressable>
           </View>
 
