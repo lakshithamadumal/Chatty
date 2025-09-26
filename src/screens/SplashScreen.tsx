@@ -30,6 +30,9 @@ export default function SplashScreen() {
   });
 
   const { applied } = useTheme();
+  const Illustration = applied === "dark"
+    ? require("../../assets/IllustrationDark.png")
+    : require("../../assets/IllustrationLight.png");
 
   const handleStart = useCallback(() => {
     navigation.navigate("ContactScreen");
@@ -42,7 +45,7 @@ export default function SplashScreen() {
         <View className="flex-1 items-center justify-between py-10 px-6">
           <View className="w-full items-center mt-32">
             <Image
-              source={require("../../assets/Illustration.png")}
+              source={Illustration}
               style={{ width: 260, height: 260, resizeMode: "contain" }}
             />
           </View>

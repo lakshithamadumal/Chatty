@@ -32,34 +32,29 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="SplashScreen"
-            screenOptions={{ animation: "fade" }}
+            screenOptions={{ headerShown: false }}
           >
             <Stack.Screen
               name="SplashScreen"
               component={SplashScreen}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="ContactScreen"
               component={ContactScreen}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="SignUpScreen"
               component={SignUpScreen}
-              options={{ headerShown: false }}
             />
 
             <Stack.Screen
               name="AvatarScreen"
               component={AvatarScreen}
-              options={{ headerShown: false }}
             />
 
             <Stack.Screen
               name="LoginScreen"
               component={LoginScreen}
-              options={{ headerShown: false }}
             />
 
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
