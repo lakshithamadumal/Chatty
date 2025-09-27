@@ -31,14 +31,16 @@ const mockChats: ChatItem[] = [
     lastMessage: "Test",
     timestamp: "Today",
     unreadCount: 1,
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
   },
   {
     id: "2",
     name: "Test 2",
     lastMessage: "test2",
     timestamp: "22/9",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
   },
 ];
 
@@ -77,14 +79,14 @@ export default function HomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-[#0f1828]">
       <StatusBar hidden={true} />
-      
+
       <View className="flex-row items-center justify-between px-4 py-3">
         <Text className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           Chats
         </Text>
         <Pressable className="p-2">
-          <AntDesign
-            name="ellipsis"
+          <MaterialIcons
+            name="menu"
             size={24}
             color={applied === "dark" ? "#F1F5F9" : "#0F1828"}
           />
@@ -116,11 +118,7 @@ export default function HomeScreen() {
 
       <View className="absolute bottom-6 right-6">
         <Pressable className="w-14 h-14 bg-[#4A61D1] dark:bg-[#6B82FF] rounded-full items-center justify-center shadow-lg">
-          <MaterialIcons 
-            name="chat" 
-            size={24} 
-            color="white" 
-          />
+          <MaterialIcons name="chat" size={24} color="white" />
         </Pressable>
       </View>
     </SafeAreaView>
