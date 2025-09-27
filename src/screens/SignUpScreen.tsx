@@ -196,10 +196,10 @@ export default function SignUpScreen() {
                   type: ALERT_TYPE.SUCCESS,
                   title: "Success",
                   textBody: "Signup successful!",
-                  autoClose: 3000,
                 });
 
                 setTimeout(() => {
+                  Dialog.hide();
                   navigation.navigate("HomeScreen");
                 }, 3000);
               }}
