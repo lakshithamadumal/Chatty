@@ -50,5 +50,9 @@ export const isvalidProfilePicture = (
   ) {
     return "Select a valid image format (JPEG, PNG , JPG).";
   }
+
+  if (image.fileSize && image.fileSize > 10 * 1024 * 1024) {
+    return "Image size should be less than 10MB.";
+  }
   return null;
 };
