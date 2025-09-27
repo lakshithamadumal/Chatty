@@ -35,10 +35,20 @@ export const isValidPhoneNumber = (phoneNumber: string): string | null => {
 };
 
 export const isvalidProfilePicture = (
-  profilePicture: string
+  image: {
+    uri: string;
+    type?: string;
+    fileSize?: number;
+  } | null
 ): string | null => {
-  if (!profilePicture || profilePicture.trim().length === 0) {
-    return "Profile picture URL is required.";
+  if (!image) {
+    return "Profile picture is required.";
+  }
+  if (
+    image.type &&
+    !["image/jpeg", "image/png", "image/jpg"].includes(image.type)
+  ) {
+    return "Select a valid image format (JPEG, PNG , JPG).";
   }
   return null;
 };
