@@ -55,6 +55,15 @@ export default function ContactScreen() {
   const bubble3Scale = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    if (!userData.countryCode) {
+      setUserData((previous) => ({
+        ...previous,
+        countryCode: "+94",
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
     const createPulseAnimation = (value: Animated.Value, delay: number) => {
       return Animated.sequence([
         Animated.delay(delay),
@@ -252,7 +261,8 @@ export default function ContactScreen() {
                     marginRight: 12,
                   }}
                   theme={{
-                    onBackgroundTextColor: applied === "dark" ? "#f1f5f9" : "#152033",
+                    onBackgroundTextColor:
+                      applied === "dark" ? "#f1f5f9" : "#152033",
                   }}
                 />
                 <TextInput
