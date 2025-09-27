@@ -13,6 +13,7 @@ import "../../global.css";
 import { useTheme } from "../theme/ThemeProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface ChatItem {
   id: string;
@@ -39,7 +40,6 @@ const mockChats: ChatItem[] = [
     timestamp: "22/9",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
   },
-
 ];
 
 export default function HomeScreen() {
@@ -53,8 +53,8 @@ export default function HomeScreen() {
           className="w-12 h-12 rounded-full"
         />
         {item.unreadCount && (
-          <View className="absolute -top-1 -right-1 bg-[#D2D5F9] rounded-full w-5 h-5 items-center justify-center">
-            <Text className="text-[#001A83] text-xs font-semibold">
+          <View className="absolute -top-1 -right-1 bg-[#D2D5F9] dark:bg-[#4A61D1] rounded-full w-5 h-5 items-center justify-center">
+            <Text className="text-[#001A83] dark:text-white text-xs font-semibold">
               {item.unreadCount}
             </Text>
           </View>
@@ -115,8 +115,12 @@ export default function HomeScreen() {
       />
 
       <View className="absolute bottom-6 right-6">
-        <Pressable className="w-14 h-14 bg-blue-600 rounded-full items-center justify-center shadow-lg">
-          <AntDesign name="plus" size={24} color="white" />
+        <Pressable className="w-14 h-14 bg-[#4A61D1] dark:bg-[#6B82FF] rounded-full items-center justify-center shadow-lg">
+          <MaterialIcons 
+            name="chat" 
+            size={24} 
+            color="white" 
+          />
         </Pressable>
       </View>
     </SafeAreaView>
