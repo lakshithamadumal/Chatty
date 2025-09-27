@@ -19,6 +19,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../../App";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../theme/ThemeProvider";
+import { useUserRegistration } from "../components/UserContext";
 
 type ContactProps = NativeStackNavigationProp<RootStack, "ContactScreen">;
 
@@ -30,6 +31,8 @@ export default function ContactScreen() {
   const [phone, setPhone] = useState("");
 
   const { applied } = useTheme();
+
+  const { userData, setUserData } = useUserRegistration();
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50 dark:bg-[#0f1828]">
@@ -48,7 +51,7 @@ export default function ContactScreen() {
               <AntDesign
                 name="left"
                 size={20}
-                color={applied === "dark" ? "#F1F5F9" : "#0F1828"} 
+                color={applied === "dark" ? "#F1F5F9" : "#0F1828"}
               />
             </Pressable>
           </View>
@@ -72,6 +75,10 @@ export default function ContactScreen() {
               onSelect={(c) => {
                 setCountryCode(c.cca2);
                 setCountry(c);
+                setUserData((previous) => ({
+                  ...previous,
+                  countryCode: `+${c.callingCode[0]}`,
+                }));
               }}
               containerButtonStyle={{
                 backgroundColor: applied === "dark" ? "#152033" : "#F4F6FA",
@@ -85,11 +92,16 @@ export default function ContactScreen() {
             />
             <TextInput
               inputMode="tel"
-              value={phone}
-              onChangeText={setPhone}
               placeholder="Phone Number"
               placeholderTextColor="#9CA3AF"
               className="flex-1 h-12 px-4 rounded-xl bg-slate-100 dark:bg-[#152033] text-slate-800 dark:text-slate-100"
+              value={userData.contactNo}
+              onChangeText={(text) =>
+                setUserData((previous) => ({
+                  ...previous,
+                  contactNo: text,
+                }))
+              }
             />
           </View>
 

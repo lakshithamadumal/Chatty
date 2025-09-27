@@ -15,7 +15,7 @@ import { useTheme } from "../theme/ThemeProvider";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../../App";
-import { useState } from "react";
+import { use, useState } from "react";
 import { useUserRegistration } from "../components/UserContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
@@ -29,8 +29,6 @@ export default function SignUpScreen() {
   const { applied } = useTheme();
 
   const { userData, setUserData } = useUserRegistration();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
 
   const [image, setImage] = useState<string | null>(null);
 
@@ -46,7 +44,6 @@ export default function SignUpScreen() {
       setImage(result.assets[0].uri);
     }
   };
-
 
   return (
     <AlertNotificationRoot>
@@ -119,25 +116,41 @@ export default function SignUpScreen() {
 
           <View className="mt-8">
             <TextInput
-              value={firstName}
-              onChangeText={setFirstName}
               placeholder="First Name"
               placeholderTextColor="#9CA3AF"
               className="h-12 px-4 rounded-xl bg-slate-100 dark:bg-[#152033] text-slate-800 dark:text-slate-100"
+              value={userData.firstName}
+              onChangeText={(text) =>
+                setUserData((previous) => ({
+                  ...previous,
+                  firstName: text,
+                }))
+              }
             />
             <View className="h-3" />
             <TextInput
-              value={lastName}
-              onChangeText={setLastName}
               placeholder="Last Name"
               placeholderTextColor="#9CA3AF"
               className="h-12 px-4 rounded-xl bg-slate-100 dark:bg-[#152033] text-slate-800 dark:text-slate-100"
+              value={userData.lastName}
+              onChangeText={(text) =>
+                setUserData((previous) => ({
+                  ...previous,
+                  lastName: text,
+                }))
+              }
             />
           </View>
 
           <View className="mt-10">
             <Pressable
-              onPress={() => navigation.replace("HomeScreen")}
+              onPress={() => {
+                setUserData((previous) => ({
+                  ...previous,
+                  profileImage: image,
+                }));
+                console.log(userData);
+              }}
               className="h-14 rounded-full bg-blue-600 items-center justify-center"
             >
               <Text className="text-white font-semibold">Create Account</Text>
