@@ -251,6 +251,9 @@ export default function ContactScreen() {
                     justifyContent: "center",
                     marginRight: 12,
                   }}
+                  theme={{
+                    onBackgroundTextColor: applied === "dark" ? "#f1f5f9" : "#152033",
+                  }}
                 />
                 <TextInput
                   inputMode="tel"
