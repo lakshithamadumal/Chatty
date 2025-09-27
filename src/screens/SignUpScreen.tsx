@@ -10,16 +10,21 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import "../../global.css";
-import { AlertNotificationRoot } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Dialog,
+} from "react-native-alert-notification";
 import { useTheme } from "../theme/ThemeProvider";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../../App";
-import { use, useState } from "react";
+import { useState } from "react";
 import { useUserRegistration } from "../components/UserContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import * as ImagePicker from "expo-image-picker";
+import { isValidFirstName, isValidLastName, isvalidProfilePicture } from "../Util/Validation";
 
 type SignupProps = NativeStackNavigationProp<RootStack, "SignUpScreen">;
 
@@ -31,6 +36,9 @@ export default function SignUpScreen() {
   const { userData, setUserData } = useUserRegistration();
 
   const [image, setImage] = useState<string | null>(null);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -149,7 +157,51 @@ export default function SignUpScreen() {
                   ...previous,
                   profileImage: image,
                 }));
-                console.log(userData);
+
+                const ValidateFirstName = isValidFirstName(userData.firstName);
+                const ValidateLastName = isValidLastName(userData.lastName);
+                const ValidateProfileImage = isvalidProfilePicture(
+                  image ? { uri: image } : null
+                );
+
+                if (ValidateFirstName) {
+                  Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: "Warning",
+                    textBody: ValidateFirstName,
+                    button: "close",
+                  });
+                  return;
+                }
+                if (ValidateLastName) {
+                  Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: "Warning",
+                    textBody: ValidateLastName,
+                    button: "close",
+                  });
+                  return;
+                }
+                if (ValidateProfileImage) {
+                  Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: "Warning",
+                    textBody: ValidateProfileImage,
+                    button: "close",
+                  });
+                  return;
+                }
+
+                Dialog.show({
+                  type: ALERT_TYPE.SUCCESS,
+                  title: "Success",
+                  textBody: "Signup successful!",
+                  autoClose: 3000,
+                });
+
+                setTimeout(() => {
+                  navigation.navigate("HomeScreen");
+                }, 3000);
               }}
               className="h-14 rounded-full bg-blue-600 items-center justify-center"
             >

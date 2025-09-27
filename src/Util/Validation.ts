@@ -13,7 +13,7 @@ export const isValidLastName = (lastName: string): string | null => {
 };
 
 export const isValidCountryCode = (countryCode: string): string | null => {
-  const countryCodePattern = /^\+\d{1,3}$/;
+  const countryCodePattern = /^\+\d{1,5}$/;
   if (!countryCode) {
     return "Country code is required.";
   }
