@@ -43,7 +43,6 @@ export default function SignUpScreen() {
 
   const [image, setImage] = useState<string | null>(null);
 
-  // Animation refs
   const orb1Scale = useRef(new Animated.Value(1)).current;
   const orb2Scale = useRef(new Animated.Value(1)).current;
   const orb3Scale = useRef(new Animated.Value(1)).current;
@@ -56,7 +55,6 @@ export default function SignUpScreen() {
   const bubble2Scale = useRef(new Animated.Value(0)).current;
   const bubble3Scale = useRef(new Animated.Value(0)).current;
 
-  // Pulsing orbs animation
   useEffect(() => {
     const createPulseAnimation = (value: Animated.Value, delay: number) => {
       return Animated.sequence([
@@ -95,7 +93,6 @@ export default function SignUpScreen() {
     };
   }, []);
 
-  // Staggered dots animation
   useEffect(() => {
     const dotsAnimation = Animated.sequence([
       Animated.delay(500),
@@ -119,7 +116,6 @@ export default function SignUpScreen() {
     dotsAnimation.start();
   }, []);
 
-  // Message bubbles animation
   useEffect(() => {
     const bubblesAnimation = Animated.stagger(400, [
       Animated.timing(bubble1Scale, {
@@ -167,9 +163,7 @@ export default function SignUpScreen() {
         <SafeAreaView className="flex-1 px-6">
           <StatusBar hidden={true} />
 
-          {/* Background Orbs */}
           <View className="absolute inset-0 overflow-hidden">
-            {/* Top Right Orb */}
             <Animated.View
               style={{
                 transform: [{ scale: orb1Scale }],
@@ -181,7 +175,6 @@ export default function SignUpScreen() {
               className="absolute w-80 h-80 rounded-full -top-40 -right-32"
             />
 
-            {/* Bottom Left Orb */}
             <Animated.View
               style={{
                 transform: [{ scale: orb2Scale }],
@@ -194,7 +187,6 @@ export default function SignUpScreen() {
             />
           </View>
 
-          {/* Back Button with Dot */}
           <View className="w-full items-start pt-2 relative">
             <Pressable
               onPress={() => navigation.goBack()}
@@ -207,7 +199,6 @@ export default function SignUpScreen() {
               />
             </Pressable>
 
-            {/* Dot near back button */}
             <Animated.View
               style={{
                 opacity: dot1Opacity,
@@ -217,7 +208,6 @@ export default function SignUpScreen() {
             />
           </View>
 
-          {/* Title Section with Message Bubble */}
           <View className="items-center mt-8 relative">
             <Animated.View
               style={{
@@ -234,7 +224,6 @@ export default function SignUpScreen() {
             </Text>
           </View>
 
-          {/* Profile Picture Section with Dots */}
           <View className="items-center mt-8 relative">
             <Pressable
               className="h-28 w-28 rounded-full items-center justify-center"
@@ -275,7 +264,6 @@ export default function SignUpScreen() {
               )}
             </Pressable>
 
-            {/* Message bubble near profile picture */}
             <Animated.View
               style={{
                 transform: [{ scale: bubble2Scale }],
@@ -287,9 +275,7 @@ export default function SignUpScreen() {
             </Animated.View>
           </View>
 
-          {/* Input Fields Section */}
           <View className="mt-8 relative">
-            {/* Dot near input fields */}
             <Animated.View
               style={{
                 opacity: dot3Opacity,
@@ -325,7 +311,6 @@ export default function SignUpScreen() {
             />
           </View>
 
-          {/* Create Account Button Section */}
           <View className="mt-10 relative">
             <Pressable
               onPress={() => {
@@ -386,7 +371,6 @@ export default function SignUpScreen() {
               </Text>
             </Pressable>
 
-            {/* Additional decorative dots around screen */}
             <Animated.View
               style={{
                 opacity: dot1Opacity,
