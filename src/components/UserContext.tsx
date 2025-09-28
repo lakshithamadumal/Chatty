@@ -25,7 +25,7 @@ export const UserRegistrationProvider: React.FC<{
     lastName: "",
     contactNo: "",
     countryCode: "",
-    profileImage: "",
+    profileImage: null,
   });
   return (
     <UserRegistrationContext.Provider value={{ userData, setUserData }}>

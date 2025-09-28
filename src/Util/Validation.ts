@@ -42,7 +42,7 @@ export const isvalidProfilePicture = (
   } | null
 ): string | null => {
   if (!image) {
-    return "Profile picture is required.";
+    return null;
   }
   if (
     image.type &&
