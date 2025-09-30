@@ -31,6 +31,7 @@ import {
   isValidLastName,
   isvalidProfilePicture,
 } from "../Util/Validation";
+import { createNewAccount } from "../api/UserService";
 
 type SignupProps = NativeStackNavigationProp<RootStack, "SignUpScreen">;
 
@@ -313,7 +314,7 @@ export default function SignUpScreen() {
 
           <View className="mt-10 relative">
             <Pressable
-              onPress={() => {
+              onPress={async () => {
                 setUserData((previous) => ({
                   ...previous,
                   profileImage: image,
@@ -353,16 +354,7 @@ export default function SignUpScreen() {
                   return;
                 }
 
-                Dialog.show({
-                  type: ALERT_TYPE.SUCCESS,
-                  title: "Success",
-                  textBody: "Signup successful!",
-                });
-
-                setTimeout(() => {
-                  Dialog.hide();
-                  navigation.navigate("HomeScreen");
-                }, 3000);
+                await createNewAccount(userData);
               }}
               className="h-14 rounded-full bg-blue-600 items-center justify-center shadow-lg shadow-blue-500/30"
             >
@@ -374,10 +366,7 @@ export default function SignUpScreen() {
             <Animated.View
               style={{
                 opacity: dot1Opacity,
-                backgroundColor:
-                  applied === "dark"
-                    ? "#eab308"
-                    : "#facc15",
+                backgroundColor: applied === "dark" ? "#eab308" : "#facc15",
               }}
               className="absolute w-5 h-5 rounded-full -top-6 right-8"
             />
@@ -385,10 +374,7 @@ export default function SignUpScreen() {
             <Animated.View
               style={{
                 opacity: dot2Opacity,
-                backgroundColor:
-                  applied === "dark"
-                    ? "#ef4444"
-                    : "#f87171",
+                backgroundColor: applied === "dark" ? "#ef4444" : "#f87171",
               }}
               className="absolute w-4 h-4 rounded-full bottom-4 -left-4"
             />
