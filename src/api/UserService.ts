@@ -1,4 +1,9 @@
 import { UserRegistrationDate } from "../components/UserContext";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Dialog,
+} from "react-native-alert-notification";
 
 const API = process.env.EXPO_PUBLIC_APP_URL + "/Chatty";
 
@@ -28,11 +33,26 @@ export const createNewAccount = async (
   if (response.ok) {
     const json = await response.json();
     if (json.status) {
-      return json.message;
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Success",
+        textBody: "Account created successfully",
+        button: "close",
+      });
     } else {
-      return json.message;
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: json.message,
+        button: "close",
+      });
     }
   } else {
-    throw new Error("Failed to create account");
+    Dialog.show({
+      type: ALERT_TYPE.DANGER,
+      title: "Error",
+      textBody: "Failed to create account",
+      button: "close",
+    });
   }
 };
