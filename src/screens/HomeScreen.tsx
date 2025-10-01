@@ -28,8 +28,8 @@ interface ChatItem {
 const mockChats: ChatItem[] = [
   {
     id: "1",
-    name: "Test",
-    lastMessage: "Test",
+    name: "Lakshitha Madumal",
+    lastMessage: "Haw you doing?",
     timestamp: "Today",
     unreadCount: 1,
     avatar:
@@ -37,8 +37,8 @@ const mockChats: ChatItem[] = [
   },
   {
     id: "2",
-    name: "Test 2",
-    lastMessage: "test2",
+    name: "Amal Perera",
+    lastMessage: "Let's catch up later.",
     timestamp: "22/9",
     avatar:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
