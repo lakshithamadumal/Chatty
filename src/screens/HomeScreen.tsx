@@ -14,6 +14,7 @@ import { useTheme } from "../theme/ThemeProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useState } from "react";
 
 interface ChatItem {
   id: string;
@@ -46,6 +47,7 @@ const mockChats: ChatItem[] = [
 
 export default function HomeScreen() {
   const { applied } = useTheme();
+  const [search, setSearch] = useState("");
 
   const renderChatItem = ({ item }: { item: ChatItem }) => (
     <TouchableOpacity className="flex-row items-center py-4 px-4 border-b border-gray-100 dark:border-gray-800">
@@ -54,13 +56,13 @@ export default function HomeScreen() {
           source={{ uri: item.avatar }}
           className="w-12 h-12 rounded-full"
         />
-        {item.unreadCount && (
+        {item.unreadCount ? (
           <View className="absolute -top-1 -right-1 bg-[#D2D5F9] dark:bg-[#4A61D1] rounded-full w-5 h-5 items-center justify-center">
             <Text className="text-[#001A83] dark:text-white text-xs font-semibold">
               {item.unreadCount}
             </Text>
           </View>
-        )}
+        ) : null}
       </View>
       <View className="flex-1 ml-3">
         <Text className="text-base font-medium text-gray-900 dark:text-gray-100">
@@ -74,6 +76,13 @@ export default function HomeScreen() {
         {item.timestamp}
       </Text>
     </TouchableOpacity>
+  );
+
+  // Search filter
+  const filteredChats = mockChats.filter(
+    (chat) =>
+      chat.name.toLowerCase().includes(search.toLowerCase()) ||
+      chat.lastMessage.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -104,16 +113,25 @@ export default function HomeScreen() {
             placeholder="Search"
             placeholderTextColor={applied === "dark" ? "#ADB5BD" : "#ADB5BD"}
             className="flex-1 ml-2 text-gray-900 dark:text-gray-100"
+            value={search}
+            onChangeText={setSearch}
           />
         </View>
       </View>
 
       <FlatList
-        data={mockChats}
+        data={filteredChats}
         keyExtractor={(item) => item.id}
         renderItem={renderChatItem}
         showsVerticalScrollIndicator={false}
         className="flex-1"
+        ListEmptyComponent={
+          <View className="items-center mt-10">
+            <Text className="text-gray-400 dark:text-gray-500 text-base">
+              No chats found.
+            </Text>
+          </View>
+        }
       />
 
       <View className="absolute bottom-6 right-6">

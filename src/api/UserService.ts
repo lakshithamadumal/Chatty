@@ -32,21 +32,7 @@ export const createNewAccount = async (
 
   if (response.ok) {
     const json = await response.json();
-    if (json.status) {
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Success",
-        textBody: "Account created successfully",
-        button: "close",
-      });
-    } else {
-      Dialog.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Error",
-        textBody: json.message,
-        button: "close",
-      });
-    }
+    return json;
   } else {
     Dialog.show({
       type: ALERT_TYPE.DANGER,

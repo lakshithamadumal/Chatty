@@ -9,6 +9,7 @@ import {
   Image,
   Animated,
   Easing,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import "../../global.css";
@@ -43,6 +44,7 @@ export default function SignUpScreen() {
   const { userData, setUserData } = useUserRegistration();
 
   const [image, setImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const orb1Scale = useRef(new Animated.Value(1)).current;
   const orb2Scale = useRef(new Animated.Value(1)).current;
@@ -314,6 +316,7 @@ export default function SignUpScreen() {
 
           <View className="mt-10 relative">
             <Pressable
+              disabled={loading ? true : false}
               onPress={async () => {
                 setUserData((previous) => ({
                   ...previous,
@@ -354,13 +357,58 @@ export default function SignUpScreen() {
                   return;
                 }
 
-                await createNewAccount(userData);
+                try {
+                  // Account Creating
+                  setLoading(true);
+                  const response = await createNewAccount(userData);
+                  console.log(response);
+
+                  if (response.status) {
+                    Dialog.show({
+                      type: ALERT_TYPE.SUCCESS,
+                      title: "Success",
+                      textBody: "Account created successfully",
+                      button: "close",
+                    });
+
+                    setTimeout(() => {
+                      Dialog.hide();
+                      navigation.replace("HomeScreen");
+                    }, 2000);
+                  } else {
+                    Dialog.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: "Warning",
+                      textBody: response.message,
+                      button: "close",
+                    });
+                  }
+                } catch (error) {
+                  Dialog.show({
+                    type: ALERT_TYPE.DANGER,
+                    title: "Error",
+                    textBody: "Failed to create account",
+                    button: "close",
+                  });
+                  console.log("Failed to create account " + error);
+                } finally {
+                  setLoading(false);
+                }
               }}
               className="h-14 rounded-full bg-blue-600 items-center justify-center shadow-lg shadow-blue-500/30"
             >
-              <Text className="text-white font-semibold text-base">
-                Create Account
-              </Text>
+              {loading ? (
+                <View className="flex-row items-center space-x-2">
+                  <ActivityIndicator size="small" color="#fff" />
+                  <Text className="text-white font-semibold text-base">
+                    Loading...
+                  </Text>
+                </View>
+              ) : (
+                <Text className="text-white font-semibold text-base">
+                  Create Account
+                </Text>
+              )}
             </Pressable>
 
             <Animated.View
