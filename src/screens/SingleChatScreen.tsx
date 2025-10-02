@@ -18,6 +18,9 @@ import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState, useRef } from "react";
+import { RootStack } from "../../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 
 interface Message {
   id: string;
@@ -43,7 +46,14 @@ const mockMessages: Message[] = [
   },
 ];
 
+type SingleChattProps = NativeStackNavigationProp<
+  RootStack,
+  "SingleChatScreen"
+>;
+
 export default function SingleChatScreen() {
+  const navigation = useNavigation<SingleChattProps>();
+
   const { applied } = useTheme();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>(mockMessages);

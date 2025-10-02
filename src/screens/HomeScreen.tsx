@@ -15,6 +15,9 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
+import { RootStack } from "../../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 
 interface ChatItem {
   id: string;
@@ -45,7 +48,11 @@ const mockChats: ChatItem[] = [
   },
 ];
 
+type HomeProps = NativeStackNavigationProp<RootStack, "HomeScreen">;
+
 export default function HomeScreen() {
+  const navigation = useNavigation<HomeProps>();
+
   const { applied } = useTheme();
   const [search, setSearch] = useState("");
 

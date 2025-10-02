@@ -21,7 +21,12 @@ export type RootStack = {
   LoginScreen: undefined;
   HomeScreen: undefined;
   ProfileScreen: undefined;
-  SingleChatScreen: undefined;
+  SettingScreen: undefined;
+  SingleChatScreen: {
+    chatId: number;
+    chatName: string;
+    lastTime: string;
+  };
 };
 
 const Stack = createNativeStackNavigator();
@@ -43,7 +48,10 @@ export default function App() {
 
             <Stack.Screen name="HomeScreen" component={HomeTabs} />
             <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
+            <Stack.Screen
+              name="SingleChatScreen"
+              component={SingleChatScreen}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </UserRegistrationProvider>
