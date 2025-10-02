@@ -11,6 +11,7 @@ import {
   Platform,
   ImageBackground,
   Alert,
+  Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../theme/ThemeProvider";
@@ -49,6 +50,8 @@ export default function ChatScreen() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const flatListRef = useRef<FlatList>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
 
   const sendMessage = () => {
     if (message.trim() === "") return;
@@ -84,26 +87,24 @@ export default function ChatScreen() {
   };
 
   const handleDeleteMessage = (messageId: string) => {
-    Alert.alert(
-      "Delete Message",
-      "Are you sure you want to delete this message?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            setMessages((prevMessages) =>
-              prevMessages.filter((msg) => msg.id !== messageId)
-            );
-            console.log(`Message deleted with ID: ${messageId}`);
-          },
-        },
-      ]
-    );
+    setSelectedMessageId(messageId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedMessageId) {
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg.id !== selectedMessageId)
+      );
+      console.log(`Message deleted with ID: ${selectedMessageId}`);
+    }
+    setShowDeleteModal(false);
+    setSelectedMessageId(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setSelectedMessageId(null);
   };
 
   const renderMessage = ({ item }: { item: Message }) => (
@@ -316,6 +317,97 @@ export default function ChatScreen() {
           </View>
         </KeyboardAvoidingView>
       </View>
+
+      {/* Custom Delete Modal */}
+      <Modal
+        visible={showDeleteModal}
+        transparent
+        animationType="fade"
+        onRequestClose={cancelDelete}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.35)",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: applied === "dark" ? "#1e293b" : "#fff",
+              padding: 24,
+              borderRadius: 18,
+              width: "80%",
+              alignItems: "center",
+              shadowColor: "#000",
+              shadowOpacity: 0.15,
+              shadowRadius: 10,
+              elevation: 8,
+            }}
+          >
+            <Text
+              style={{
+                color: applied === "dark" ? "#fff" : "#222",
+                fontSize: 18,
+                fontWeight: "bold",
+                marginBottom: 8,
+              }}
+            >
+              Delete Message
+            </Text>
+            <Text
+              style={{
+                color: applied === "dark" ? "#cbd5e1" : "#555",
+                fontSize: 15,
+                marginBottom: 22,
+                textAlign: "center",
+              }}
+            >
+              Are you sure you want to delete this message?
+            </Text>
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <TouchableOpacity
+                onPress={cancelDelete}
+                style={{
+                  paddingVertical: 8,
+                  paddingHorizontal: 22,
+                  borderRadius: 8,
+                  backgroundColor: applied === "dark" ? "#334155" : "#e5e7eb",
+                  marginRight: 4,
+                }}
+              >
+                <Text
+                  style={{
+                    color: applied === "dark" ? "#cbd5e1" : "#222",
+                    fontWeight: "600",
+                  }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={confirmDelete}
+                style={{
+                  paddingVertical: 8,
+                  paddingHorizontal: 22,
+                  borderRadius: 8,
+                  backgroundColor: "#ef4444",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontWeight: "600",
+                  }}
+                >
+                  Delete
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
