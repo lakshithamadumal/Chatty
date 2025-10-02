@@ -98,6 +98,14 @@ export default function HomeScreen() {
     <SafeAreaView className="flex-1 bg-white dark:bg-[#0f1828]">
       <StatusBar hidden={true} />
 
+      <View className="absolute top-10 right-0 w-40 h-40">
+        <View className="absolute -top-20 -right-20 w-60 h-60 bg-[#4A61D1] dark:bg-[#6B82FF] rounded-full opacity-10" />
+      </View>
+
+      <View className="absolute bottom-0 left-0 w-60 h-60">
+        <View className="absolute -bottom-20 -left-20 w-60 h-60 bg-[#4A61D1] dark:bg-[#6B82FF] rounded-full opacity-5" />
+      </View>
+
       <View className="flex-row items-center justify-between px-4 py-3">
         <Text className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           Chats
@@ -144,8 +152,17 @@ export default function HomeScreen() {
       />
 
       <View className="absolute bottom-6 right-6">
-        <Pressable className="w-14 h-14 bg-[#4A61D1] dark:bg-[#6B82FF] rounded-full items-center justify-center shadow-lg">
-          <MaterialIcons name="chat" size={24} color="white" />
+        <Pressable
+          className="w-16 h-16 bg-[#4A61D1] dark:bg-[#6B82FF] rounded-full items-center justify-center shadow-xl"
+          style={{
+            shadowColor: "#4A61D1",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 8,
+            elevation: 8,
+          }}
+        >
+          <MaterialIcons name="edit" size={24} color="white" />
         </Pressable>
       </View>
     </SafeAreaView>

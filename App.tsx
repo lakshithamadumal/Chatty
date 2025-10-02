@@ -26,6 +26,7 @@ export type RootStack = {
     chatId: number;
     chatName: string;
     lastTime: string;
+    profileImage: string;
   };
 };
 
@@ -37,7 +38,7 @@ export default function App() {
       <UserRegistrationProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="SingleChatScreen"
+            initialRouteName="HomeScreen"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="SplashScreen" component={SplashScreen} />
