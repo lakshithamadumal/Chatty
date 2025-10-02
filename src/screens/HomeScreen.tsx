@@ -29,7 +29,7 @@ const mockChats: ChatItem[] = [
   {
     id: "1",
     name: "Lakshitha Madumal",
-    lastMessage: "Haw you doing?",
+    lastMessage: "How you doing? Let's catch up sometime this week.",
     timestamp: "Today",
     unreadCount: 1,
     avatar:
@@ -37,74 +37,6 @@ const mockChats: ChatItem[] = [
   },
   {
     id: "2",
-    name: "Amal Perera",
-    lastMessage: "Let's catch up later.",
-    timestamp: "22/9",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "3",
-    name: "Lakshitha Madumal",
-    lastMessage: "Haw you doing?",
-    timestamp: "Today",
-    unreadCount: 1,
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "4",
-    name: "Amal Perera",
-    lastMessage: "Let's catch up later.",
-    timestamp: "22/9",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "5",
-    name: "Lakshitha Madumal",
-    lastMessage: "Haw you doing?",
-    timestamp: "Today",
-    unreadCount: 1,
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "6",
-    name: "Amal Perera",
-    lastMessage: "Let's catch up later.",
-    timestamp: "22/9",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "7",
-    name: "Lakshitha Madumal",
-    lastMessage: "Haw you doing?",
-    timestamp: "Today",
-    unreadCount: 1,
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "8",
-    name: "Amal Perera",
-    lastMessage: "Let's catch up later.",
-    timestamp: "22/9",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "9",
-    name: "Lakshitha Madumal",
-    lastMessage: "Haw you doing?",
-    timestamp: "Today",
-    unreadCount: 1,
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "10",
     name: "Amal Perera",
     lastMessage: "Let's catch up later.",
     timestamp: "22/9",
@@ -137,7 +69,9 @@ export default function HomeScreen() {
           {item.name}
         </Text>
         <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          {item.lastMessage}
+          {item.lastMessage.length > 35
+            ? item.lastMessage.slice(0, 35) + "..."
+            : item.lastMessage}
         </Text>
       </View>
       <Text className="text-xs text-gray-400 dark:text-gray-500">
@@ -155,7 +89,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-[#0f1828]">
-      <StatusBar hidden={false} />
+      <StatusBar hidden={true} />
 
       <View className="flex-row items-center justify-between px-4 py-3">
         <Text className="text-2xl font-bold text-gray-900 dark:text-gray-100">
