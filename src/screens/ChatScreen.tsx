@@ -184,7 +184,7 @@ export default function ChatScreen() {
             bottom: 0,
             width: "100%",
             height: "100%",
-            opacity: applied === "dark" ? 0.1 : 0.1,
+            opacity: applied === "dark" ? 0.18 : 0.12,
           }}
         />
         {/* Chat messages */}
@@ -194,52 +194,97 @@ export default function ChatScreen() {
           keyExtractor={(item) => item.id}
           renderItem={renderMessage}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingVertical: 16 }}
+          contentContainerStyle={{ paddingVertical: 16, paddingBottom: 80 }}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
           style={{ flex: 1 }}
         />
-      </View>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-      >
-        <View className="flex-row items-center px-4 py-3 bg-white dark:bg-[#0f1828] border-t border-gray-200 dark:border-gray-800">
-          <View className="flex-row items-center flex-1 bg-[#F7F7FC] dark:bg-[#152033] rounded-full px-4 py-3 mr-3">
-            <Pressable className="mr-3">
-              <Feather
-                name="plus"
-                size={20}
-                color={applied === "dark" ? "#ADB5BD" : "#6B7280"}
-              />
-            </Pressable>
-            <TextInput
-              placeholder="Type a message..."
-              placeholderTextColor={applied === "dark" ? "#ADB5BD" : "#6B7280"}
-              className="flex-1 text-gray-900 dark:text-gray-100 text-base"
-              value={message}
-              onChangeText={setMessage}
-              multiline
-              maxLength={500}
-            />
-          </View>
-          <TouchableOpacity
-            onPress={sendMessage}
-            disabled={message.trim() === ""}
-            className={`w-12 h-12 rounded-full items-center justify-center ${
-              message.trim() === ""
-                ? "bg-gray-300 dark:bg-gray-700"
-                : "bg-[#4A61D1] dark:bg-[#6B82FF]"
-            }`}
+        {/* Floating input */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            paddingBottom: 12,
+            paddingHorizontal: 12,
+            backgroundColor: "transparent",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-end",
+              backgroundColor: "transparent",
+            }}
           >
-            <MaterialIcons
-              name="send"
-              size={20}
-              color={message.trim() === "" ? "#9CA3AF" : "white"}
-            />
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: applied === "dark" ? "#152033" : "#fff",
+                borderRadius: 30,
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                marginRight: 8,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.08,
+                shadowRadius: 4,
+                elevation: 2,
+              }}
+            >
+              <TextInput
+                placeholder="Type a message..."
+                placeholderTextColor={applied === "dark" ? "#ADB5BD" : "#6B7280"}
+                style={{
+                  flex: 1,
+                  color: applied === "dark" ? "#fff" : "#222",
+                  fontSize: 16,
+                  maxHeight: 100,
+                }}
+                value={message}
+                onChangeText={setMessage}
+                multiline
+                maxLength={500}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={sendMessage}
+              disabled={message.trim() === ""}
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                backgroundColor:
+                  message.trim() === ""
+                    ? applied === "dark"
+                      ? "#2d3748"
+                      : "#e5e7eb"
+                    : applied === "dark"
+                    ? "#6B82FF"
+                    : "#4A61D1",
+                alignItems: "center",
+                justifyContent: "center",
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.12,
+                shadowRadius: 4,
+                elevation: 2,
+              }}
+            >
+              <MaterialIcons
+                name="send"
+                size={22}
+                color={message.trim() === "" ? "#9CA3AF" : "#fff"}
+              />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }

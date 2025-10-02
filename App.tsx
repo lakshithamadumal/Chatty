@@ -31,7 +31,7 @@ export default function App() {
       <UserRegistrationProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="ChatScreen"
+            initialRouteName="SplashScreen"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="SplashScreen" component={SplashScreen} />
