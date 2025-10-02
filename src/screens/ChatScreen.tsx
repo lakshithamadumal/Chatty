@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ImageBackground,
+  Alert, // Alert import කරන්න
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../theme/ThemeProvider";
@@ -82,8 +83,37 @@ export default function ChatScreen() {
     }, 2000);
   };
 
+  // Message delete කිරීමේ function එක
+  const handleDeleteMessage = (messageId: string) => {
+    Alert.alert(
+      "Delete Message",
+      "Are you sure you want to delete this message?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            // Message delete කිරීම
+            setMessages((prevMessages) =>
+              prevMessages.filter((msg) => msg.id !== messageId)
+            );
+            // Console log එකේ message id එක පෙන්වන්න
+            console.log(`Message deleted with ID: ${messageId}`);
+          },
+        },
+      ]
+    );
+  };
+
   const renderMessage = ({ item }: { item: Message }) => (
-    <View
+    <TouchableOpacity
+      activeOpacity={1}
+      delayLongPress={500} // Long press delay
+      onLongPress={() => handleDeleteMessage(item.id)} // Long press කලාම delete function එක call කරන්න
       className={`flex-row px-4 py-1 ${
         item.isSent ? "justify-end" : "justify-start"
       }`}
@@ -119,10 +149,10 @@ export default function ChatScreen() {
           )}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
-    const pattern =
+  const pattern =
     applied === "dark"
       ? require("../../assets/patternDark.png")
       : require("../../assets/patternLight.png");
@@ -239,7 +269,9 @@ export default function ChatScreen() {
             >
               <TextInput
                 placeholder="Type a message..."
-                placeholderTextColor={applied === "dark" ? "#ADB5BD" : "#6B7280"}
+                placeholderTextColor={
+                  applied === "dark" ? "#ADB5BD" : "#6B7280"
+                }
                 style={{
                   flex: 1,
                   color: applied === "dark" ? "#fff" : "#222",
@@ -265,8 +297,8 @@ export default function ChatScreen() {
                       ? "#2d3748"
                       : "#e5e7eb"
                     : applied === "dark"
-                    ? "#6B82FF"
-                    : "#4A61D1",
+                      ? "#6B82FF"
+                      : "#4A61D1",
                 alignItems: "center",
                 justifyContent: "center",
                 shadowColor: "#000",
