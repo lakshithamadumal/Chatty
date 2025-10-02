@@ -53,6 +53,7 @@ export default function ChatScreen() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [selectedMessageText, setSelectedMessageText] = useState<string>("");
+  const [selectedMessageIsSent, setSelectedMessageIsSent] = useState<boolean>(false);
 
   const sendMessage = () => {
     if (message.trim() === "") return;
@@ -87,18 +88,34 @@ export default function ChatScreen() {
     }, 2000);
   };
 
-  const handleDeleteMessage = (messageId: string, messageText: string) => {
+  const handleDeleteMessage = (messageId: string, messageText: string, isSent: boolean) => {
     setSelectedMessageId(messageId);
     setSelectedMessageText(messageText);
+    setSelectedMessageIsSent(isSent);
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
+  const deleteForMe = () => {
     if (selectedMessageId) {
       setMessages((prevMessages) =>
         prevMessages.filter((msg) => msg.id !== selectedMessageId)
       );
-      console.log(`Message deleted with ID: ${selectedMessageId}`);
+      console.log(`Message deleted for me only - ID: ${selectedMessageId}`);
+    }
+    setShowDeleteModal(false);
+    setSelectedMessageId(null);
+    setSelectedMessageText("");
+  };
+
+  const deleteForEveryone = () => {
+    if (selectedMessageId) {
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg.id !== selectedMessageId)
+      );
+      console.log(`Message deleted for everyone - ID: ${selectedMessageId}`);
+      
+      // Here you would typically make an API call to delete the message from the server
+      // so it gets deleted for all users in the chat
     }
     setShowDeleteModal(false);
     setSelectedMessageId(null);
@@ -115,9 +132,7 @@ export default function ChatScreen() {
     <TouchableOpacity
       activeOpacity={1}
       delayLongPress={500}
-      onLongPress={
-        item.isSent ? () => handleDeleteMessage(item.id, item.text) : undefined
-      }
+      onLongPress={() => handleDeleteMessage(item.id, item.text, item.isSent)}
       className={`flex-row px-4 py-1 ${
         item.isSent ? "justify-end" : "justify-start"
       }`}
@@ -362,17 +377,31 @@ export default function ChatScreen() {
               </View>
             </View>
 
-            {/* Delete Option - Red Color */}
+            {/* Delete for Me Option - Available for all messages */}
             <TouchableOpacity
-              onPress={confirmDelete}
+              onPress={deleteForMe}
               className={`py-4 border-b ${
                 applied === "dark" ? "border-gray-700" : "border-gray-200"
               }`}
             >
               <Text className="text-center text-red-500 text-lg font-semibold">
-                Delete for Everyone
+                Delete for Me
               </Text>
             </TouchableOpacity>
+
+            {/* Delete for Everyone Option - Only for sent messages */}
+            {selectedMessageIsSent && (
+              <TouchableOpacity
+                onPress={deleteForEveryone}
+                className={`py-4 border-b ${
+                  applied === "dark" ? "border-gray-700" : "border-gray-200"
+                }`}
+              >
+                <Text className="text-center text-red-500 text-lg font-semibold">
+                  Delete for Everyone
+                </Text>
+              </TouchableOpacity>
+            )}
 
             {/* Cancel Option */}
             <TouchableOpacity
