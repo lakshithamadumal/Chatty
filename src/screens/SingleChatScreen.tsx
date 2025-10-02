@@ -10,7 +10,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ImageBackground,
-  Alert,
   Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,25 +22,24 @@ import { useState, useRef } from "react";
 interface Message {
   id: string;
   text: string;
-  timestamp: string;
-  isSent: boolean;
-  isRead: boolean;
+  sender: "me" | "friend";
+  time: string;
+  status?: "sent" | "delivered" | "read";
 }
 
 const mockMessages: Message[] = [
   {
     id: "1",
     text: "Hey! How are you doing?",
-    timestamp: "10:30 AM",
-    isSent: false,
-    isRead: true,
+    sender: "friend",
+    time: "10:30 AM",
   },
   {
     id: "2",
     text: "I'm good! Just finished work. How about you?",
-    timestamp: "10:32 AM",
-    isSent: true,
-    isRead: true,
+    sender: "me",
+    time: "10:32 AM",
+    status: "read",
   },
 ];
 
@@ -50,10 +48,15 @@ export default function SingleChatScreen() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const flatListRef = useRef<FlatList>(null);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
+    null
+  );
   const [selectedMessageText, setSelectedMessageText] = useState<string>("");
-  const [selectedMessageIsSent, setSelectedMessageIsSent] = useState<boolean>(false);
+  const [selectedMessageSender, setSelectedMessageSender] = useState<
+    "me" | "friend"
+  >("me");
 
   const sendMessage = () => {
     if (message.trim() === "") return;
@@ -61,68 +64,73 @@ export default function SingleChatScreen() {
     const newMessage: Message = {
       id: Date.now().toString(),
       text: message,
-      timestamp: new Date().toLocaleTimeString([], {
+      sender: "me",
+      time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       }),
-      isSent: true,
-      isRead: false,
+      status: "sent",
     };
 
     setMessages((prev) => [...prev, newMessage]);
     setMessage("");
 
-    // Auto reply after 2 seconds
+    setTimeout(() => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === newMessage.id ? { ...msg, status: "delivered" } : msg
+        )
+      );
+    }, 1000);
+
+    setTimeout(() => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === newMessage.id ? { ...msg, status: "read" } : msg
+        )
+      );
+    }, 2000);
+
     setTimeout(() => {
       const autoReply: Message = {
         id: (Date.now() + 1).toString(),
         text: "Sounds good! Looking forward to it 👋",
-        timestamp: new Date().toLocaleTimeString([], {
+        sender: "friend",
+        time: new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        isSent: false,
-        isRead: false,
       };
       setMessages((prev) => [...prev, autoReply]);
-    }, 2000);
+    }, 2500);
   };
 
-  const handleDeleteMessage = (messageId: string, messageText: string, isSent: boolean) => {
+  const handleDeleteMessage = (
+    messageId: string,
+    messageText: string,
+    sender: "me" | "friend"
+  ) => {
     setSelectedMessageId(messageId);
     setSelectedMessageText(messageText);
-    setSelectedMessageIsSent(isSent);
+    setSelectedMessageSender(sender);
     setShowDeleteModal(true);
   };
 
   const deleteForMe = () => {
     if (selectedMessageId) {
-      setMessages((prevMessages) =>
-        prevMessages.filter((msg) => msg.id !== selectedMessageId)
-      );
-      console.log(`Message deleted for me only - ID: ${selectedMessageId}`);
+      setMessages((prev) => prev.filter((msg) => msg.id !== selectedMessageId));
     }
-    setShowDeleteModal(false);
-    setSelectedMessageId(null);
-    setSelectedMessageText("");
+    closeDeleteModal();
   };
 
   const deleteForEveryone = () => {
     if (selectedMessageId) {
-      setMessages((prevMessages) =>
-        prevMessages.filter((msg) => msg.id !== selectedMessageId)
-      );
-      console.log(`Message deleted for everyone - ID: ${selectedMessageId}`);
-      
-      // Here you would typically make an API call to delete the message from the server
-      // so it gets deleted for all users in the chat
+      setMessages((prev) => prev.filter((msg) => msg.id !== selectedMessageId));
     }
-    setShowDeleteModal(false);
-    setSelectedMessageId(null);
-    setSelectedMessageText("");
+    closeDeleteModal();
   };
 
-  const cancelDelete = () => {
+  const closeDeleteModal = () => {
     setShowDeleteModal(false);
     setSelectedMessageId(null);
     setSelectedMessageText("");
@@ -132,21 +140,21 @@ export default function SingleChatScreen() {
     <TouchableOpacity
       activeOpacity={1}
       delayLongPress={500}
-      onLongPress={() => handleDeleteMessage(item.id, item.text, item.isSent)}
-      className={`flex-row px-4 py-1 ${
-        item.isSent ? "justify-end" : "justify-start"
-      }`}
+      onLongPress={() => handleDeleteMessage(item.id, item.text, item.sender)}
+      className={`flex-row px-4 py-1 ${item.sender === "me" ? "justify-end" : "justify-start"}`}
     >
       <View
         className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-          item.isSent
+          item.sender === "me"
             ? "bg-[#4A61D1] dark:bg-[#6B82FF] rounded-br-md"
             : "bg-[#F0F2F5] dark:bg-[#152033] rounded-bl-md"
         }`}
       >
         <Text
           className={`text-base ${
-            item.isSent ? "text-white" : "text-gray-900 dark:text-gray-100"
+            item.sender === "me"
+              ? "text-white"
+              : "text-gray-900 dark:text-gray-100"
           }`}
         >
           {item.text}
@@ -154,16 +162,18 @@ export default function SingleChatScreen() {
         <View className="flex-row items-center justify-end mt-1 space-x-1">
           <Text
             className={`text-xs ${
-              item.isSent ? "text-blue-100" : "text-gray-400 dark:text-gray-500"
+              item.sender === "me"
+                ? "text-blue-100"
+                : "text-gray-400 dark:text-gray-500"
             }`}
           >
-            {item.timestamp}
+            {item.time}
           </Text>
-          {item.isSent && (
+          {item.sender === "me" && item.status && (
             <Ionicons
-              name={item.isRead ? "checkmark-done" : "checkmark"}
+              name={item.status === "read" ? "checkmark-done" : "checkmark"}
               size={14}
-              color={item.isSent ? "#BFD1FF" : "#9CA3AF"}
+              color={item.status === "read" ? "#BFD1FF" : "#9CA3AF"}
             />
           )}
         </View>
@@ -183,6 +193,7 @@ export default function SingleChatScreen() {
         backgroundColor={applied === "dark" ? "#0f1828" : "#ffffff"}
       />
 
+      {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0f1828]">
         <View className="flex-row items-center">
           <Pressable className="mr-4">
@@ -220,8 +231,8 @@ export default function SingleChatScreen() {
         </View>
       </View>
 
+      {/* Messages + Pattern BG */}
       <View className="flex-1 bg-[#F7F7FC] dark:bg-[#0A1427]">
-        {/* Pattern background */}
         <ImageBackground
           source={pattern}
           resizeMode="repeat"
@@ -236,7 +247,6 @@ export default function SingleChatScreen() {
             opacity: applied === "dark" ? 0.18 : 0.12,
           }}
         />
-        {/* Chat messages */}
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -245,107 +255,98 @@ export default function SingleChatScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingVertical: 16, paddingBottom: 80 }}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
-          style={{ flex: 1 }}
         />
-
-        {/* Floating input */}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            paddingBottom: 12,
-            paddingHorizontal: 12,
-            backgroundColor: "transparent",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-end",
-              backgroundColor: "transparent",
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: applied === "dark" ? "#152033" : "#fff",
-                borderRadius: 30,
-                paddingHorizontal: 16,
-                paddingVertical: 8,
-                marginRight: 8,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.08,
-                shadowRadius: 4,
-                elevation: 2,
-              }}
-            >
-              <TextInput
-                placeholder="Type a message..."
-                placeholderTextColor={
-                  applied === "dark" ? "#ADB5BD" : "#6B7280"
-                }
-                style={{
-                  flex: 1,
-                  color: applied === "dark" ? "#fff" : "#222",
-                  fontSize: 16,
-                  maxHeight: 100,
-                }}
-                value={message}
-                onChangeText={setMessage}
-                multiline
-                maxLength={500}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={sendMessage}
-              disabled={message.trim() === ""}
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: 24,
-                backgroundColor:
-                  message.trim() === ""
-                    ? applied === "dark"
-                      ? "#2d3748"
-                      : "#e5e7eb"
-                    : applied === "dark"
-                      ? "#6B82FF"
-                      : "#4A61D1",
-                alignItems: "center",
-                justifyContent: "center",
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.12,
-                shadowRadius: 4,
-                elevation: 2,
-              }}
-            >
-              <MaterialIcons
-                name="send"
-                size={22}
-                color={message.trim() === "" ? "#9CA3AF" : "#fff"}
-              />
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
       </View>
 
-      {/* WhatsApp Style Delete Confirmation Modal */}
+      {/* Input */}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          paddingBottom: 12,
+          paddingHorizontal: 12,
+          backgroundColor: "transparent",
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: applied === "dark" ? "#152033" : "#fff",
+              borderRadius: 30,
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              marginRight: 8,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.08,
+              shadowRadius: 4,
+              elevation: 2,
+            }}
+          >
+            <TextInput
+              placeholder="Type a message..."
+              placeholderTextColor={applied === "dark" ? "#ADB5BD" : "#6B7280"}
+              style={{
+                flex: 1,
+                color: applied === "dark" ? "#fff" : "#222",
+                fontSize: 16,
+                maxHeight: 100,
+              }}
+              value={message}
+              onChangeText={setMessage}
+              multiline
+              maxLength={500}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={sendMessage}
+            disabled={message.trim() === ""}
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor:
+                message.trim() === ""
+                  ? applied === "dark"
+                    ? "#2d3748"
+                    : "#e5e7eb"
+                  : applied === "dark"
+                    ? "#6B82FF"
+                    : "#4A61D1",
+              alignItems: "center",
+              justifyContent: "center",
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.12,
+              shadowRadius: 4,
+              elevation: 2,
+            }}
+          >
+            <MaterialIcons
+              name="send"
+              size={22}
+              color={message.trim() === "" ? "#9CA3AF" : "#fff"}
+            />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+
+      {/* Delete Modal */}
       <Modal
         visible={showDeleteModal}
         transparent
         animationType="fade"
-        onRequestClose={cancelDelete}
+        onRequestClose={closeDeleteModal}
       >
         <View className="flex-1 bg-black/60 justify-end">
-          <View 
+          <View
             className={`w-full rounded-t-3xl ${
               applied === "dark" ? "bg-[#1e293b]" : "bg-white"
             }`}
@@ -357,27 +358,33 @@ export default function SingleChatScreen() {
               elevation: 10,
             }}
           >
-            {/* Delete Message Preview */}
-            <View className={`p-4 border-b ${
-              applied === "dark" ? "border-gray-700" : "border-gray-200"
-            }`}>
-              <Text className={`text-center text-sm ${
-                applied === "dark" ? "text-gray-300" : "text-gray-600"
-              }`}>
+            <View
+              className={`p-4 border-b ${
+                applied === "dark" ? "border-gray-700" : "border-gray-200"
+              }`}
+            >
+              <Text
+                className={`text-center text-sm ${
+                  applied === "dark" ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
                 Delete this message?
               </Text>
-              <View className={`mt-3 p-3 rounded-lg ${
-                applied === "dark" ? "bg-[#152033]" : "bg-[#F0F2F5]"
-              }`}>
-                <Text className={`text-base ${
-                  applied === "dark" ? "text-gray-200" : "text-gray-800"
-                }`}>
+              <View
+                className={`mt-3 p-3 rounded-lg ${
+                  applied === "dark" ? "bg-[#152033]" : "bg-[#F0F2F5]"
+                }`}
+              >
+                <Text
+                  className={`text-base ${
+                    applied === "dark" ? "text-gray-200" : "text-gray-800"
+                  }`}
+                >
                   {selectedMessageText}
                 </Text>
               </View>
             </View>
 
-            {/* Delete for Me Option - Available for all messages */}
             <TouchableOpacity
               onPress={deleteForMe}
               className={`py-4 border-b ${
@@ -389,8 +396,7 @@ export default function SingleChatScreen() {
               </Text>
             </TouchableOpacity>
 
-            {/* Delete for Everyone Option - Only for sent messages */}
-            {selectedMessageIsSent && (
+            {selectedMessageSender === "me" && (
               <TouchableOpacity
                 onPress={deleteForEveryone}
                 className={`py-4 border-b ${
@@ -403,19 +409,16 @@ export default function SingleChatScreen() {
               </TouchableOpacity>
             )}
 
-            {/* Cancel Option */}
-            <TouchableOpacity
-              onPress={cancelDelete}
-              className="py-4"
-            >
-              <Text className={`text-center text-lg ${
-                applied === "dark" ? "text-blue-400" : "text-blue-500"
-              }`}>
+            <TouchableOpacity onPress={closeDeleteModal} className="py-4">
+              <Text
+                className={`text-center text-lg ${
+                  applied === "dark" ? "text-blue-400" : "text-blue-500"
+                }`}
+              >
                 Cancel
               </Text>
             </TouchableOpacity>
 
-            {/* Bottom safe area */}
             <View className="pb-6" />
           </View>
         </View>

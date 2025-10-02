@@ -21,7 +21,7 @@ export type RootStack = {
   LoginScreen: undefined;
   HomeScreen: undefined;
   ProfileScreen: undefined;
-  ChatScreen: undefined;
+  SingleChatScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator();
