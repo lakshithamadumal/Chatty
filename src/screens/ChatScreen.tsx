@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  ImageBackground,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../theme/ThemeProvider";
@@ -121,6 +122,11 @@ export default function ChatScreen() {
     </View>
   );
 
+    const pattern =
+    applied === "dark"
+      ? require("../../assets/patternDark.png")
+      : require("../../assets/patternLight.png");
+
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-[#0f1828]">
       <StatusBar
@@ -166,6 +172,22 @@ export default function ChatScreen() {
       </View>
 
       <View className="flex-1 bg-[#F7F7FC] dark:bg-[#0A1427]">
+        {/* Pattern background */}
+        <ImageBackground
+          source={pattern}
+          resizeMode="repeat"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100%",
+            height: "100%",
+            opacity: applied === "dark" ? 0.1 : 0.1,
+          }}
+        />
+        {/* Chat messages */}
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -174,6 +196,7 @@ export default function ChatScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingVertical: 16 }}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
+          style={{ flex: 1 }}
         />
       </View>
 
