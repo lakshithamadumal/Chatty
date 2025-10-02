@@ -19,7 +19,10 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState, useRef } from "react";
 import { RootStack } from "../../App";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 
 interface Message {
@@ -46,13 +49,13 @@ const mockMessages: Message[] = [
   },
 ];
 
-type SingleChattProps = NativeStackNavigationProp<
-  RootStack,
-  "SingleChatScreen"
->;
+type SingleChattProps = NativeStackScreenProps<RootStack, "SingleChatScreen">;
 
-export default function SingleChatScreen() {
-  const navigation = useNavigation<SingleChattProps>();
+export default function SingleChatScreen({
+  route,
+  navigation,
+}: SingleChattProps) {
+  const { chatId, friendName, lastTime, profileImage } = route.params;
 
   const { applied } = useTheme();
   const [message, setMessage] = useState("");
@@ -216,16 +219,16 @@ export default function SingleChatScreen() {
           <View className="flex-row items-center">
             <Image
               source={{
-                uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                uri: profileImage,
               }}
               className="w-10 h-10 rounded-full"
             />
             <View className="ml-3">
               <Text className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Lakshitha Madumal
+                {friendName}
               </Text>
               <Text className="text-sm text-gray-500 dark:text-gray-400">
-                Last seen today at 10:30 AM
+                Last seen {lastTime}
               </Text>
             </View>
           </View>

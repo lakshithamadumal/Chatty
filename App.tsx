@@ -24,13 +24,13 @@ export type RootStack = {
   SettingScreen: undefined;
   SingleChatScreen: {
     chatId: number;
-    chatName: string;
+    friendName: string;
     lastTime: string;
     profileImage: string;
   };
 };
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStack>();
 
 export default function App() {
   return (
@@ -38,7 +38,7 @@ export default function App() {
       <UserRegistrationProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="SingleChatScreen"
+            initialRouteName="HomeScreen"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="SplashScreen" component={SplashScreen} />
