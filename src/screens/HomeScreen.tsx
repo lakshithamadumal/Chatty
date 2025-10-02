@@ -43,6 +43,74 @@ const mockChats: ChatItem[] = [
     avatar:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
   },
+  {
+    id: "3",
+    name: "Lakshitha Madumal",
+    lastMessage: "Haw you doing?",
+    timestamp: "Today",
+    unreadCount: 1,
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+  },
+  {
+    id: "4",
+    name: "Amal Perera",
+    lastMessage: "Let's catch up later.",
+    timestamp: "22/9",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+  },
+  {
+    id: "5",
+    name: "Lakshitha Madumal",
+    lastMessage: "Haw you doing?",
+    timestamp: "Today",
+    unreadCount: 1,
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+  },
+  {
+    id: "6",
+    name: "Amal Perera",
+    lastMessage: "Let's catch up later.",
+    timestamp: "22/9",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+  },
+  {
+    id: "7",
+    name: "Lakshitha Madumal",
+    lastMessage: "Haw you doing?",
+    timestamp: "Today",
+    unreadCount: 1,
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+  },
+  {
+    id: "8",
+    name: "Amal Perera",
+    lastMessage: "Let's catch up later.",
+    timestamp: "22/9",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+  },
+  {
+    id: "9",
+    name: "Lakshitha Madumal",
+    lastMessage: "Haw you doing?",
+    timestamp: "Today",
+    unreadCount: 1,
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+  },
+  {
+    id: "10",
+    name: "Amal Perera",
+    lastMessage: "Let's catch up later.",
+    timestamp: "22/9",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+  },
 ];
 
 export default function HomeScreen() {
@@ -87,7 +155,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-[#0f1828]">
-      <StatusBar hidden={true} />
+      <StatusBar hidden={false} />
 
       <View className="flex-row items-center justify-between px-4 py-3">
         <Text className="text-2xl font-bold text-gray-900 dark:text-gray-100">
