@@ -57,7 +57,18 @@ export default function HomeScreen() {
   const [search, setSearch] = useState("");
 
   const renderChatItem = ({ item }: { item: ChatItem }) => (
-    <TouchableOpacity className="flex-row items-center py-4 px-4 border-b border-gray-100 dark:border-gray-800">
+    <TouchableOpacity
+      className="flex-row items-center py-4 px-4 border-b border-gray-100 dark:border-gray-800"
+      onPress={() => {
+        navigation.navigate("SingleChatScreen", {
+          chatId: 1,
+          friendName: "Lakshitha Madumal",
+          lastSeenTime: "Today 9:30 AM",
+          profileImage:
+            "https://iamlaky.online/assets/profile.jpg",
+        });
+      }}
+    >
       <View className="relative">
         <Image
           source={{ uri: item.avatar }}

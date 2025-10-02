@@ -25,7 +25,7 @@ export type RootStack = {
   SingleChatScreen: {
     chatId: number;
     friendName: string;
-    lastTime: string;
+    lastSeenTime: string;
     profileImage: string;
   };
 };
