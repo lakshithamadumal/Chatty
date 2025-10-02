@@ -52,6 +52,7 @@ export default function ChatScreen() {
   const flatListRef = useRef<FlatList>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  const [selectedMessageText, setSelectedMessageText] = useState<string>("");
 
   const sendMessage = () => {
     if (message.trim() === "") return;
@@ -86,8 +87,9 @@ export default function ChatScreen() {
     }, 2000);
   };
 
-  const handleDeleteMessage = (messageId: string) => {
+  const handleDeleteMessage = (messageId: string, messageText: string) => {
     setSelectedMessageId(messageId);
+    setSelectedMessageText(messageText);
     setShowDeleteModal(true);
   };
 
@@ -100,11 +102,13 @@ export default function ChatScreen() {
     }
     setShowDeleteModal(false);
     setSelectedMessageId(null);
+    setSelectedMessageText("");
   };
 
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setSelectedMessageId(null);
+    setSelectedMessageText("");
   };
 
   const renderMessage = ({ item }: { item: Message }) => (
@@ -112,7 +116,7 @@ export default function ChatScreen() {
       activeOpacity={1}
       delayLongPress={500}
       onLongPress={
-        item.isSent ? () => handleDeleteMessage(item.id) : undefined
+        item.isSent ? () => handleDeleteMessage(item.id, item.text) : undefined
       }
       className={`flex-row px-4 py-1 ${
         item.isSent ? "justify-end" : "justify-start"
@@ -318,93 +322,72 @@ export default function ChatScreen() {
         </KeyboardAvoidingView>
       </View>
 
-      {/* Custom Delete Modal */}
+      {/* WhatsApp Style Delete Confirmation Modal */}
       <Modal
         visible={showDeleteModal}
         transparent
         animationType="fade"
         onRequestClose={cancelDelete}
       >
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "rgba(0,0,0,0.35)",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <View
+        <View className="flex-1 bg-black/60 justify-end">
+          <View 
+            className={`w-full rounded-t-3xl ${
+              applied === "dark" ? "bg-[#1e293b]" : "bg-white"
+            }`}
             style={{
-              backgroundColor: applied === "dark" ? "#1e293b" : "#fff",
-              padding: 24,
-              borderRadius: 18,
-              width: "80%",
-              alignItems: "center",
               shadowColor: "#000",
-              shadowOpacity: 0.15,
-              shadowRadius: 10,
-              elevation: 8,
+              shadowOffset: { width: 0, height: -2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 10,
             }}
           >
-            <Text
-              style={{
-                color: applied === "dark" ? "#fff" : "#222",
-                fontSize: 18,
-                fontWeight: "bold",
-                marginBottom: 8,
-              }}
-            >
-              Delete Message
-            </Text>
-            <Text
-              style={{
-                color: applied === "dark" ? "#cbd5e1" : "#555",
-                fontSize: 15,
-                marginBottom: 22,
-                textAlign: "center",
-              }}
-            >
-              Are you sure you want to delete this message?
-            </Text>
-            <View style={{ flexDirection: "row", gap: 12 }}>
-              <TouchableOpacity
-                onPress={cancelDelete}
-                style={{
-                  paddingVertical: 8,
-                  paddingHorizontal: 22,
-                  borderRadius: 8,
-                  backgroundColor: applied === "dark" ? "#334155" : "#e5e7eb",
-                  marginRight: 4,
-                }}
-              >
-                <Text
-                  style={{
-                    color: applied === "dark" ? "#cbd5e1" : "#222",
-                    fontWeight: "600",
-                  }}
-                >
-                  Cancel
+            {/* Delete Message Preview */}
+            <View className={`p-4 border-b ${
+              applied === "dark" ? "border-gray-700" : "border-gray-200"
+            }`}>
+              <Text className={`text-center text-sm ${
+                applied === "dark" ? "text-gray-300" : "text-gray-600"
+              }`}>
+                Delete this message?
+              </Text>
+              <View className={`mt-3 p-3 rounded-lg ${
+                applied === "dark" ? "bg-[#152033]" : "bg-[#F0F2F5]"
+              }`}>
+                <Text className={`text-base ${
+                  applied === "dark" ? "text-gray-200" : "text-gray-800"
+                }`}>
+                  {selectedMessageText}
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={confirmDelete}
-                style={{
-                  paddingVertical: 8,
-                  paddingHorizontal: 22,
-                  borderRadius: 8,
-                  backgroundColor: "#ef4444",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontWeight: "600",
-                  }}
-                >
-                  Delete
-                </Text>
-              </TouchableOpacity>
+              </View>
             </View>
+
+            {/* Delete Option - Red Color */}
+            <TouchableOpacity
+              onPress={confirmDelete}
+              className={`py-4 border-b ${
+                applied === "dark" ? "border-gray-700" : "border-gray-200"
+              }`}
+            >
+              <Text className="text-center text-red-500 text-lg font-semibold">
+                Delete for Everyone
+              </Text>
+            </TouchableOpacity>
+
+            {/* Cancel Option */}
+            <TouchableOpacity
+              onPress={cancelDelete}
+              className="py-4"
+            >
+              <Text className={`text-center text-lg ${
+                applied === "dark" ? "text-blue-400" : "text-blue-500"
+              }`}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+
+            {/* Bottom safe area */}
+            <View className="pb-6" />
           </View>
         </View>
       </Modal>
