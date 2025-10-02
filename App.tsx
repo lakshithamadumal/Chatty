@@ -11,6 +11,7 @@ import ContactScreen from "./src/screens/ContactScreen";
 import { ThemeProvider } from "./src/theme/ThemeProvider";
 import { UserRegistrationProvider } from "./src/components/UserContext";
 import HomeTabs from "./HomeTabs";
+import ChatScreen from "./src/screens/ChatScreen";
 
 export type RootStack = {
   SplashScreen: undefined;
@@ -19,7 +20,7 @@ export type RootStack = {
   LoginScreen: undefined;
   HomeScreen: undefined;
   ProfileScreen: undefined;
-  SettingScreen: undefined;
+  ChatScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator();
@@ -30,7 +31,7 @@ export default function App() {
       <UserRegistrationProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="SplashScreen"
+            initialRouteName="ChatScreen"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="SplashScreen" component={SplashScreen} />
@@ -41,7 +42,7 @@ export default function App() {
 
             <Stack.Screen name="HomeScreen" component={HomeTabs} />
             <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen name="SettingScreen" component={SettingScreen} />
+            <Stack.Screen name="ChatScreen" component={ChatScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </UserRegistrationProvider>
