@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ImageBackground,
-  Alert, // Alert import කරන්න
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../theme/ThemeProvider";
@@ -83,7 +83,6 @@ export default function ChatScreen() {
     }, 2000);
   };
 
-  // Message delete කිරීමේ function එක
   const handleDeleteMessage = (messageId: string) => {
     Alert.alert(
       "Delete Message",
@@ -97,11 +96,9 @@ export default function ChatScreen() {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            // Message delete කිරීම
             setMessages((prevMessages) =>
               prevMessages.filter((msg) => msg.id !== messageId)
             );
-            // Console log එකේ message id එක පෙන්වන්න
             console.log(`Message deleted with ID: ${messageId}`);
           },
         },
@@ -112,8 +109,10 @@ export default function ChatScreen() {
   const renderMessage = ({ item }: { item: Message }) => (
     <TouchableOpacity
       activeOpacity={1}
-      delayLongPress={500} // Long press delay
-      onLongPress={() => handleDeleteMessage(item.id)} // Long press කලාම delete function එක call කරන්න
+      delayLongPress={500}
+      onLongPress={
+        item.isSent ? () => handleDeleteMessage(item.id) : undefined
+      }
       className={`flex-row px-4 py-1 ${
         item.isSent ? "justify-end" : "justify-start"
       }`}
