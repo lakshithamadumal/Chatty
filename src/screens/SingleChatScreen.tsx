@@ -224,8 +224,8 @@ export default function SingleChatScreen() {
               <Text className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Lakshitha Madumal
               </Text>
-              <Text className="text-sm text-green-500 dark:text-green-400">
-                Online
+              <Text className="text-sm text-gray-500 dark:text-gray-400">
+                Last seen today at 10:30 AM
               </Text>
             </View>
           </View>
