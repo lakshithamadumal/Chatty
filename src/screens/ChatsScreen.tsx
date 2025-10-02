@@ -6,7 +6,7 @@ import NewChatScreen from "./NewChatScreen";
 const Stack = createNativeStackNavigator();
 export default function ChatsScreen() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="SettingScreen" component={SettingScreen} />
       <Stack.Screen name="NewChatScreen" component={NewChatScreen} />

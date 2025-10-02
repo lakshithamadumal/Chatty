@@ -79,7 +79,7 @@ export default function SplashScreen() {
       : require("../../assets/IllustrationLight.png");
 
   const handleStart = useCallback(() => {
-    navigation.navigate("ContactScreen");
+    navigation.navigate("HomeScreen");
   }, [navigation]);
 
   return (

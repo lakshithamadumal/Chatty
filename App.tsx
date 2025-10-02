@@ -10,6 +10,7 @@ import SettingScreen from "./src/screens/SettingScreen";
 import ContactScreen from "./src/screens/ContactScreen";
 import { ThemeProvider } from "./src/theme/ThemeProvider";
 import { UserRegistrationProvider } from "./src/components/UserContext";
+import HomeTabs from "./HomeTabs";
 
 export type RootStack = {
   SplashScreen: undefined;
@@ -32,25 +33,13 @@ export default function App() {
             initialRouteName="SplashScreen"
             screenOptions={{ headerShown: false }}
           >
-            <Stack.Screen
-              name="SplashScreen"
-              component={SplashScreen}
-            />
-            <Stack.Screen
-              name="ContactScreen"
-              component={ContactScreen}
-            />
-            <Stack.Screen
-              name="SignUpScreen"
-              component={SignUpScreen}
-            />
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            <Stack.Screen name="ContactScreen" component={ContactScreen} />
+            <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
 
-            <Stack.Screen
-              name="LoginScreen"
-              component={LoginScreen}
-            />
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
 
-            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen name="HomeScreen" component={HomeTabs} />
             <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
             <Stack.Screen name="SettingScreen" component={SettingScreen} />
           </Stack.Navigator>
