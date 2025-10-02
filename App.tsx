@@ -11,7 +11,8 @@ import ContactScreen from "./src/screens/ContactScreen";
 import { ThemeProvider } from "./src/theme/ThemeProvider";
 import { UserRegistrationProvider } from "./src/components/UserContext";
 import HomeTabs from "./HomeTabs";
-import ChatScreen from "./src/screens/ChatScreen";
+import ChatScreen from "./src/screens/SingleChatScreen";
+import SingleChatScreen from "./src/screens/SingleChatScreen";
 
 export type RootStack = {
   SplashScreen: undefined;
@@ -31,7 +32,7 @@ export default function App() {
       <UserRegistrationProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="ChatScreen"
+            initialRouteName="SingleChatScreen"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="SplashScreen" component={SplashScreen} />
@@ -42,7 +43,7 @@ export default function App() {
 
             <Stack.Screen name="HomeScreen" component={HomeTabs} />
             <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen name="ChatScreen" component={ChatScreen} />
+            <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </UserRegistrationProvider>

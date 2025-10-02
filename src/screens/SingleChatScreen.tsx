@@ -45,7 +45,7 @@ const mockMessages: Message[] = [
   },
 ];
 
-export default function ChatScreen() {
+export default function SingleChatScreen() {
   const { applied } = useTheme();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>(mockMessages);
