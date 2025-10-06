@@ -13,11 +13,14 @@ export function useChatList(): Chat[] {
 
     sendMessage({ type: "get_chat_list" });
     const onMessage = (event: MessageEvent) => {
-      const data: WSResponse = JSON.parse(event.data);
-      if (data.type === "friend_list") {
-        console.log("Received friend list:", data.data);
-        setChatList(data.data);
-      }
+      console.log("====================================");
+      console.log(event.data);
+      console.log("====================================");
+      //   const data: WSResponse = JSON.parse(event.data);
+      //   if (data.type === "friend_list") {
+      //     console.log("Received friend list:", data.data);
+      //     setChatList(data.data);
+      //   }
     };
 
     socket.addEventListener("message", onMessage);

@@ -23,6 +23,12 @@ export const WebSocketProvider: React.FC<{
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    if (
+      socketRef.current &&
+      socketRef.current.readyState === WebSocket.OPEN
+    ) {
+      return;
+    }
     const socket = new WebSocket(
       `wss://${process.env.EXPO_PUBLIC_WS_URL}/Chatty/chat?userId=${userId}`
     );
