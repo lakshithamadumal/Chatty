@@ -21,7 +21,7 @@ export function formatChatTime(timestamp: string): string {
     hour12: true,
   });
 
-  if (isToday) return timeStr;
-  if (isYesterday) return `Yesterday ${timeStr}`;
-  return `${date.toLocaleDateString()} ${timeStr}`;
+  if (isToday) return timeStr; // 10:30 AM
+  if (isYesterday) return `Yesterday ${timeStr}`; // Yesterday 10:30 AM
+  return `${date.toLocaleDateString()} ${timeStr}`; // 9/28/2025 10:30 AM
 }
