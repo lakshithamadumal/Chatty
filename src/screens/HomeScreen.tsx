@@ -65,7 +65,7 @@ export default function HomeScreen() {
     name: chat.friendName,
     lastMessage: chat.lastMessage,
     timestamp: chat.lastTimeStamp,
-    unreadCount: chat.unreadCount,
+    unreadCount: typeof chat.unreadCount === "number" ? chat.unreadCount : 0,
     avatar: chat.profileImage,
   }));
 
