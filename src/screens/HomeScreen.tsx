@@ -30,26 +30,6 @@ interface ChatItem {
   avatar: string;
 }
 
-const mockChats: ChatItem[] = [
-  {
-    id: "1",
-    name: "Lakshitha Madumal",
-    lastMessage: "How you doing? Let's catch up sometime this week.",
-    timestamp: "Today",
-    unreadCount: 1,
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "2",
-    name: "Amal Perera",
-    lastMessage: "Let's catch up later.",
-    timestamp: "22/9",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-  },
-];
-
 type HomeProps = NativeStackNavigationProp<RootStack, "HomeScreen">;
 
 export default function HomeScreen() {
@@ -65,7 +45,7 @@ export default function HomeScreen() {
     name: chat.friendName,
     lastMessage: chat.lastMessage,
     timestamp: chat.lastTimeStamp,
-    unreadCount: typeof chat.unreadCount === "number" ? chat.unreadCount : 0,
+    unreadCount: chat.unreadCount,
     avatar: chat.profileImage,
   }));
 
@@ -86,13 +66,13 @@ export default function HomeScreen() {
           source={{ uri: item.avatar }}
           className="w-12 h-12 rounded-full"
         />
-        {item.unreadCount ? (
+        {(item.unreadCount ?? 0) > 0 && (
           <View className="absolute -top-1 -right-1 bg-[#D2D5F9] dark:bg-[#4A61D1] rounded-full w-5 h-5 items-center justify-center">
             <Text className="text-[#001A83] dark:text-white text-xs font-semibold">
-              {item.unreadCount}
+              {item.unreadCount ?? 0}
             </Text>
           </View>
-        ) : null}
+        )}
       </View>
       <View className="flex-1 ml-3">
         <Text className="text-base font-medium text-gray-900 dark:text-gray-100">
@@ -112,7 +92,7 @@ export default function HomeScreen() {
 
   // Search filter
   const filteredChats = adaptedChats.filter((chat) => {
-    return(
+    return (
       chat.name.toLowerCase().includes(search.toLowerCase()) ||
       chat.lastMessage.toLowerCase().includes(search.toLowerCase())
     );
