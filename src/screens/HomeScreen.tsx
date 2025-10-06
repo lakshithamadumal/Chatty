@@ -18,7 +18,7 @@ import { useState } from "react";
 import { RootStack } from "../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import { useChatList } from "../socket/useChatList";
+import { useChatList } from "../socket/UseChatList";
 import { formatChatTime } from "../Util/DateFomatter";
 
 interface ChatItem {
