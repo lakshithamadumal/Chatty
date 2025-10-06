@@ -18,6 +18,7 @@ import { useState } from "react";
 import { RootStack } from "../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
+import { useChatList } from "../socket/useChatList";
 
 interface ChatItem {
   id: string;
@@ -52,9 +53,10 @@ type HomeProps = NativeStackNavigationProp<RootStack, "HomeScreen">;
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeProps>();
-
   const { applied } = useTheme();
   const [search, setSearch] = useState("");
+
+  const chatList = useChatList();
 
   const renderChatItem = ({ item }: { item: ChatItem }) => (
     <TouchableOpacity
