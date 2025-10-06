@@ -26,5 +26,5 @@ export interface WSRequest {
 
 export interface WSResponse {
   type: string;
-  data: any;
+  payload: any;
 }
