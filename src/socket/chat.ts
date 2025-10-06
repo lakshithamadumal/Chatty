@@ -8,8 +8,12 @@ export interface User {
 }
 
 export interface Chat {
-  id: number;
-  message: string;
+  friendId: number;
+  friendName: string;
+  lastMessage: string;
+  lastTimeStamp: string;
+  unreadCount: number;
+  profileImage: string;
   from: User;
   to: User;
   createdAt: string;

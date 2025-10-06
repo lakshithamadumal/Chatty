@@ -19,6 +19,7 @@ import { RootStack } from "../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useChatList } from "../socket/useChatList";
+import { formatChatTime } from "../Util/DateFomatter";
 
 interface ChatItem {
   id: string;
@@ -58,16 +59,25 @@ export default function HomeScreen() {
 
   const chatList = useChatList();
 
+  // Adapt socket Chat model to local ChatItem shape expected by the UI
+  const adaptedChats: ChatItem[] = chatList.map((chat) => ({
+    id: String(chat.friendId),
+    name: chat.friendName,
+    lastMessage: chat.lastMessage,
+    timestamp: chat.lastTimeStamp,
+    unreadCount: chat.unreadCount,
+    avatar: chat.profileImage,
+  }));
+
   const renderChatItem = ({ item }: { item: ChatItem }) => (
     <TouchableOpacity
       className="flex-row items-center py-4 px-4 border-b border-gray-100 dark:border-gray-800"
       onPress={() => {
         navigation.navigate("SingleChatScreen", {
-          chatId: 1,
-          friendName: "Lakshitha Madumal",
-          lastSeenTime: "Today 9:30 AM",
-          profileImage:
-            "https://iamlaky.online/assets/profile.jpg",
+          chatId: Number(item.id),
+          friendName: item.name,
+          lastSeenTime: formatChatTime(item.timestamp),
+          profileImage: item.avatar,
         });
       }}
     >
@@ -95,17 +105,18 @@ export default function HomeScreen() {
         </Text>
       </View>
       <Text className="text-xs text-gray-400 dark:text-gray-500">
-        {item.timestamp}
+        {formatChatTime(item.timestamp)}
       </Text>
     </TouchableOpacity>
   );
 
   // Search filter
-  const filteredChats = mockChats.filter(
-    (chat) =>
+  const filteredChats = adaptedChats.filter((chat) => {
+    return(
       chat.name.toLowerCase().includes(search.toLowerCase()) ||
       chat.lastMessage.toLowerCase().includes(search.toLowerCase())
-  );
+    );
+  });
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-[#0f1828]">
