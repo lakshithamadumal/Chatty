@@ -13,6 +13,7 @@ import { UserRegistrationProvider } from "./src/components/UserContext";
 import HomeTabs from "./HomeTabs";
 import ChatScreen from "./src/screens/SingleChatScreen";
 import SingleChatScreen from "./src/screens/SingleChatScreen";
+import { WebSocketProvider } from "./src/socket/WebSocketProvider";
 
 export type RootStack = {
   SplashScreen: undefined;
@@ -33,29 +34,32 @@ export type RootStack = {
 const Stack = createNativeStackNavigator<RootStack>();
 
 export default function App() {
+  const USER_ID = 1;
   return (
-    <ThemeProvider>
-      <UserRegistrationProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="HomeScreen"
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="SplashScreen" component={SplashScreen} />
-            <Stack.Screen name="ContactScreen" component={ContactScreen} />
-            <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+    <WebSocketProvider userId={USER_ID}>
+      <ThemeProvider>
+        <UserRegistrationProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="HomeScreen"
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="SplashScreen" component={SplashScreen} />
+              <Stack.Screen name="ContactScreen" component={ContactScreen} />
+              <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
 
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
 
-            <Stack.Screen name="HomeScreen" component={HomeTabs} />
-            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen
-              name="SingleChatScreen"
-              component={SingleChatScreen}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </UserRegistrationProvider>
-    </ThemeProvider>
+              <Stack.Screen name="HomeScreen" component={HomeTabs} />
+              <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+              <Stack.Screen
+                name="SingleChatScreen"
+                component={SingleChatScreen}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </UserRegistrationProvider>
+      </ThemeProvider>
+    </WebSocketProvider>
   );
 }

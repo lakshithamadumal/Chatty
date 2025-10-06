@@ -15,7 +15,7 @@ interface WebSocketContextValue {
 
 const WebSocketContext = createContext<WebSocketContextValue | null>(null);
 
-export const useWebSocketProvider: React.FC<{
+export const WebSocketProvider: React.FC<{
   children: React.ReactNode;
   userId: number;
 }> = ({ children, userId }) => {
