@@ -44,3 +44,22 @@ npm install
 # Start the app
 npx react-native run-android   # For Android
 npx react-native run-ios       # For iOS
+
+---
+
+## 🧩 Recent Updates
+
+- Message list now renders in correct chronological order (oldest → newest).
+- Added console logs to assist debugging during development:
+  - Sending a message prints `{ toFriendId, content }`.
+  - Long-press → Delete for Me logs request and completion with `{ messageId }`.
+  - Long-press → Delete for Everyone logs request and completion with `{ messageId }`.
+
+These logs appear in the Metro/Device console when interacting with the chat screen.
+
+---
+
+## 🧪 Dev Tips
+
+- If messages appear out of order, ensure device/emulator time is correct since ordering relies on `createdAt` timestamps.
+- To quickly verify UI state changes, use the Delete actions from the long-press menu and watch the console output.
