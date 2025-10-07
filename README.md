@@ -112,7 +112,7 @@ If you’d like to contribute or fork, feel free to submit a PR or open an issue
 ## 🌐 Connect
 
 - 📸 Instagram — [itz_laky_](https://instagram.com/itz_laky_)
-- 💼 LinkedIn — Coming Soon
+- 💼 LinkedIn — [lakshitha-madumal](https://www.linkedin.com/in/lakshitha-madumal/)
 - 🐙 GitHub — [lakshithamadumal](https://github.com/lakshithamadumal)
 
 ---
