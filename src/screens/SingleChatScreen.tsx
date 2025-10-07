@@ -38,7 +38,7 @@ export default function SingleChatScreen({
 }: SingleChattProps) {
   const { chatId, friendName, lastSeenTime, profileImage } = route.params;
 
-  const { messages, friend } = useSingleChat(chatId);
+  const { messages, friend, sendToFriend } = useSingleChat(chatId);
   const sortedMessages = useMemo(() => {
     return [...messages].sort(
       (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -60,16 +60,13 @@ export default function SingleChatScreen({
 
   const sendMessage = () => {
     if (message.trim() === "") return;
-    // Log outgoing message content
     try {
       console.log("Sending message:", {
         toFriendId: chatId,
         content: message.trim(),
       });
-    } catch (e) {
-      // best-effort logging
-    }
-    // Hook currently manages incoming messages via websocket; sending can be wired later
+    } catch (e) {}
+    sendToFriend(message.trim());
     setMessage("");
   };
 

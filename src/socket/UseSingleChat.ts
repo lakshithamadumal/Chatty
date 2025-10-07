@@ -3,7 +3,7 @@ import { Chat, User, WSResponse } from "./chat";
 import { useWebSocket } from "./WebSocketProvider";
 
 export function useSingleChat(friendId: number) {
-  const { socket, sendMessage } = useWebSocket();
+  const { socket, sendMessage, userId } = useWebSocket();
   const [messages, setMessage] = useState<Chat[]>([]);
   const [friend, setFriend] = useState<User>();
 
@@ -28,12 +28,15 @@ export function useSingleChat(friendId: number) {
         setFriend(response.payload);
       }
 
-      if (
-        response.type === "new_message" &&
-        response.payload.to.id === friendId
-      ) {
-        //  console.log(response.payload);
-        setMessage((prev) => [response.payload, ...prev]);
+      if (response.type === "new_message") {
+        const payload = response.payload as Chat;
+        // Accept only messages in this conversation
+        if (
+          payload.to.id === friendId ||
+          payload.from.id === friendId
+        ) {
+          setMessage((prev) => [...prev, payload]);
+        }
       }
     };
 
@@ -43,5 +46,12 @@ export function useSingleChat(friendId: number) {
       socket.removeEventListener("message", onMessage);
     };
   }, [socket, friendId]);
-  return { messages: messages, friend: friend };
+
+  const sendToFriend = (content: string) => {
+    if (!content.trim()) return;
+    // Notify server (UI will update from server echo)
+    sendMessage({ type: "send_message", toUserId: friendId, message: content });
+  };
+
+  return { messages: messages, friend: friend, sendToFriend };
 }
