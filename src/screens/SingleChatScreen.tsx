@@ -25,6 +25,7 @@ import {
 } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useSingleChat } from "../socket/UseSingleChat";
+import { useSendChat } from "../socket/UseSendChat";
 import { Chat, User } from "../socket/chat";
 
 // Local UI helpers are derived from the Chat model returned by the socket hook
@@ -39,6 +40,7 @@ export default function SingleChatScreen({
   const { chatId, friendName, lastSeenTime, profileImage } = route.params;
 
   const { messages, friend, sendToFriend } = useSingleChat(chatId);
+  const sendChat = useSendChat();
   const sortedMessages = useMemo(() => {
     return [...messages].sort(
       (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -65,8 +67,8 @@ export default function SingleChatScreen({
         toFriendId: chatId,
         content: message.trim(),
       });
+      sendChat(chatId, message.trim());
     } catch (e) {}
-    sendToFriend(message.trim());
     setMessage("");
   };
 
