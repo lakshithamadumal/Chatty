@@ -1,36 +1,45 @@
 # Chatty 💬
 
-Chatty is a simple and elegant mobile chat application built with **React Native** and styled using **Tailwind CSS**.  
-It uses **MySQL** to store user accounts and message data, and **WebSocket** for real-time messaging. ⚡️📱
+> A sleek, minimal, and powerful mobile chat app built with React Native, styled using Tailwind CSS, and powered by MySQL + WebSocket. ⚡️📱
 
 ---
 
 ## ✨ Features
-- 🔐 User authentication (login & register)  
-- 💬 One-to-one messaging in real-time via WebSocket  
-- 📸 Media sharing (images, files)  
-- ✅ Message status (sent / delivered / read)  
-- 👀 Typing & online indicators  
-- 🎨 Modern, responsive UI with Tailwind CSS  
+
+- 🔐 **User Authentication** — Secure login & registration flow  
+- 💬 **1-to-1 Real-Time Messaging** — Instant communication powered by WebSocket  
+- 📸 **Media Sharing** — Send images and files seamlessly  
+- ✅ **Message Status** — Sent, Delivered, and Read indicators  
+- 👀 **Typing & Online Indicators** — Know when your friends are active  
+- 🎨 **Modern UI** — Responsive and clean interface with Tailwind CSS  
 
 ---
 
 ## 🛠️ Tech Stack
-- **Frontend:** React Native, Tailwind CSS  
-- **Backend:** Node.js / Express (with WebSocket)  
-- **Database:** MySQL  
-- **Real-time:** WebSocket for live chat updates  
+
+| Layer        | Technology                |
+|:------------ |:-------------------------|
+| **Frontend** | React Native, Tailwind CSS |
+| **Backend**  | Node.js + Express          |
+| **Database** | MySQL                      |
+| **Real-Time**| WebSocket                  |
+| **Platform** | Android & iOS              |
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 🧩 Prerequisites
+
+Make sure you have:
 - Node.js installed  
-- MySQL server running  
+- MySQL Server running  
 - React Native CLI or Expo  
 
-### Installation
+---
+
+### ⚙️ Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/lakshithamadumal/chatty.git
@@ -44,22 +53,68 @@ npm install
 # Start the app
 npx react-native run-android   # For Android
 npx react-native run-ios       # For iOS
+```
 
 ---
 
-## 🧩 Recent Updates
+## 🔄 Recent Updates
 
-- Message list now renders in correct chronological order (oldest → newest).
-- Added console logs to assist debugging during development:
-  - Sending a message prints `{ toFriendId, content }`.
-  - Long-press → Delete for Me logs request and completion with `{ messageId }`.
-  - Long-press → Delete for Everyone logs request and completion with `{ messageId }`.
-
-These logs appear in the Metro/Device console when interacting with the chat screen.
+- 🕒 Message list now displays in chronological order (oldest → newest).
+- 🧠 Added debugging logs for developers:
+  - Sending a message → `{ toFriendId, content }`
+  - On “Delete for Me” → logs request & completion `{ messageId }`
+  - On “Delete for Everyone” → logs request & completion `{ messageId }`
+- 💡 These logs appear in the Metro or Device console when interacting with the chat screen.
 
 ---
 
-## 🧪 Dev Tips
+## 🧪 Developer Tips
 
-- If messages appear out of order, ensure device/emulator time is correct since ordering relies on `createdAt` timestamps.
-- To quickly verify UI state changes, use the Delete actions from the long-press menu and watch the console output.
+- ⚠️ Messages out of order? → Check your device/emulator clock. Ordering depends on `createdAt`.
+- 🧰 Use long-press delete actions to test UI reactivity and confirm console logs.
+
+---
+
+## 💡 About
+
+Chatty is designed for simplicity and speed — built with love by Lakshitha Madumal (Laky).  
+It blends clean UI with real-time power, offering a modern chat experience for mobile users. 💬📱
+
+---
+
+## 📊 Project Stats
+
+| Category   | Value                |
+|:---------- |:--------------------|
+| ⭐ Stars    | 0                   |
+| 👀 Watchers| 0                   |
+| 🍴 Forks   | 0                   |
+| 📦 Packages| None yet            |
+| 🧑‍💻 Languages | TypeScript (98.8%), JavaScript (1.1%), CSS (0.1%) |
+
+---
+
+## 🧠 Suggested Workflows
+
+- 🧩 Webpack — Build and bundle your Node.js project.
+- ⚡ Deno — Test your code efficiently.
+- 🧱 SLSA Generator — Generate SLSA3 provenance for release workflows.
+
+---
+
+## 📜 License
+
+This project is currently open for learning and collaboration.  
+If you’d like to contribute or fork, feel free to submit a PR or open an issue. 🙌
+
+---
+
+## 🌐 Connect
+
+- 📸 Instagram — [itz_laky_](https://instagram.com/itz_laky_)
+- 💼 LinkedIn — Coming Soon
+- 🐙 GitHub — [lakshithamadumal](https://github.com/lakshithamadumal)
+
+---
+
+#ReactNative #TailwindCSS #ChatApp #WebSocket #MySQL #FullStack #MobileDev
