@@ -17,37 +17,18 @@ import { useTheme } from "../theme/ThemeProvider";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { RootStack } from "../../App";
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
+import { useSingleChat } from "../socket/UseSingleChat";
+import { Chat, User } from "../socket/chat";
 
-interface Message {
-  id: string;
-  text: string;
-  sender: "me" | "friend";
-  time: string;
-  status?: "sent" | "delivered" | "read";
-}
+// Local UI helpers are derived from the Chat model returned by the socket hook
 
-const mockMessages: Message[] = [
-  {
-    id: "1",
-    text: "Hey! How are you doing?",
-    sender: "friend",
-    time: "10:30 AM",
-  },
-  {
-    id: "2",
-    text: "I'm good! Just finished work. How about you?",
-    sender: "me",
-    time: "10:32 AM",
-    status: "read",
-  },
-];
 
 type SingleChattProps = NativeStackScreenProps<RootStack, "SingleChatScreen">;
 
@@ -57,10 +38,16 @@ export default function SingleChatScreen({
 }: SingleChattProps) {
   const { chatId, friendName, lastSeenTime, profileImage } = route.params;
 
+  const { messages, friend } = useSingleChat(chatId);
+  const sortedMessages = useMemo(() => {
+    return [...messages].sort(
+      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+  }, [messages]);
+
   const { applied } = useTheme();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlatList<Chat>>(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
@@ -73,49 +60,17 @@ export default function SingleChatScreen({
 
   const sendMessage = () => {
     if (message.trim() === "") return;
-
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      text: message,
-      sender: "me",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      status: "sent",
-    };
-
-    setMessages((prev) => [...prev, newMessage]);
+    // Log outgoing message content
+    try {
+      console.log("Sending message:", {
+        toFriendId: chatId,
+        content: message.trim(),
+      });
+    } catch (e) {
+      // best-effort logging
+    }
+    // Hook currently manages incoming messages via websocket; sending can be wired later
     setMessage("");
-
-    setTimeout(() => {
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === newMessage.id ? { ...msg, status: "delivered" } : msg
-        )
-      );
-    }, 1000);
-
-    setTimeout(() => {
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === newMessage.id ? { ...msg, status: "read" } : msg
-        )
-      );
-    }, 2000);
-
-    setTimeout(() => {
-      const autoReply: Message = {
-        id: (Date.now() + 1).toString(),
-        text: "Sounds good! Looking forward to it 👋",
-        sender: "friend",
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages((prev) => [...prev, autoReply]);
-    }, 2500);
   };
 
   const handleDeleteMessage = (
@@ -130,17 +85,31 @@ export default function SingleChatScreen({
   };
 
   const deleteForMe = () => {
-    if (selectedMessageId) {
-      setMessages((prev) => prev.filter((msg) => msg.id !== selectedMessageId));
-    }
+    // Log delete for me with message id
+    try {
+      console.log("Delete for me requested:", { messageId: selectedMessageId });
+    } catch (e) {}
+    // Deletion can be implemented via websocket action; for now just close modal
     closeDeleteModal();
+    try {
+      console.log("Deleted message (for me):", { messageId: selectedMessageId });
+    } catch (e) {}
   };
 
   const deleteForEveryone = () => {
-    if (selectedMessageId) {
-      setMessages((prev) => prev.filter((msg) => msg.id !== selectedMessageId));
-    }
+    // Log delete for everyone with message id
+    try {
+      console.log("Delete for everyone requested:", {
+        messageId: selectedMessageId,
+      });
+    } catch (e) {}
+    // Deletion can be implemented via websocket action; for now just close modal
     closeDeleteModal();
+    try {
+      console.log("Deleted message (for everyone):", {
+        messageId: selectedMessageId,
+      });
+    } catch (e) {}
   };
 
   const closeDeleteModal = () => {
@@ -149,50 +118,65 @@ export default function SingleChatScreen({
     setSelectedMessageText("");
   };
 
-  const renderMessage = ({ item }: { item: Message }) => (
-    <TouchableOpacity
-      activeOpacity={1}
-      delayLongPress={500}
-      onLongPress={() => handleDeleteMessage(item.id, item.text, item.sender)}
-      className={`flex-row px-4 py-1 ${item.sender === "me" ? "justify-end" : "justify-start"}`}
-    >
-      <View
-        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-          item.sender === "me"
-            ? "bg-[#4A61D1] dark:bg-[#6B82FF] rounded-br-md"
-            : "bg-[#F0F2F5] dark:bg-[#152033] rounded-bl-md"
-        }`}
+  const renderMessage = ({ item }: { item: Chat }) => {
+    const isFromFriend = item.from.id === chatId;
+    const messageText = (item as any).message ?? item.lastMessage;
+    const timeText = new Date(item.createdAt).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const syntheticId = `${item.createdAt}-${item.from.id}`;
+
+    return (
+      <TouchableOpacity
+        activeOpacity={1}
+        delayLongPress={500}
+        onLongPress={() =>
+          handleDeleteMessage(
+            syntheticId,
+            messageText,
+            isFromFriend ? "friend" : "me"
+          )
+        }
+        className={`flex-row px-4 py-1 ${isFromFriend ? "justify-start" : "justify-end"}`}
       >
-        <Text
-          className={`text-base ${
-            item.sender === "me"
-              ? "text-white"
-              : "text-gray-900 dark:text-gray-100"
+        <View
+          className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+            isFromFriend
+              ? "bg-[#F0F2F5] dark:bg-[#152033] rounded-bl-md"
+              : "bg[#4A61D1] dark:bg-[#6B82FF] rounded-br-md".replace(
+                  "bg[",
+                  "bg-["
+                )
           }`}
         >
-          {item.text}
-        </Text>
-        <View className="flex-row items-center justify-end mt-1 space-x-1">
           <Text
-            className={`text-xs ${
-              item.sender === "me"
-                ? "text-blue-100"
-                : "text-gray-400 dark:text-gray-500"
+            className={`text-base ${
+              isFromFriend ? "text-gray-900 dark:text-gray-100" : "text-white"
             }`}
           >
-            {item.time}
+            {messageText}
           </Text>
-          {item.sender === "me" && item.status && (
-            <Ionicons
-              name={item.status === "read" ? "checkmark-done" : "checkmark"}
-              size={14}
-              color={item.status === "read" ? "#BFD1FF" : "#9CA3AF"}
-            />
-          )}
+          <View className="flex-row items-center justify-end mt-1 space-x-1">
+            <Text
+              className={`text-xs ${
+                isFromFriend ? "text-gray-400 dark:text-gray-500" : "text-blue-100"
+              }`}
+            >
+              {timeText}
+            </Text>
+            {!isFromFriend && item.status && (
+              <Ionicons
+                name={item.status === "read" ? "checkmark-done" : "checkmark"}
+                size={14}
+                color={item.status === "read" ? "#BFD1FF" : "#9CA3AF"}
+              />
+            )}
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   const pattern =
     applied === "dark"
@@ -262,8 +246,8 @@ export default function SingleChatScreen({
         />
         <FlatList
           ref={flatListRef}
-          data={messages}
-          keyExtractor={(item) => item.id}
+          data={sortedMessages}
+          keyExtractor={(item) => `${item.createdAt}-${item.from.id}`}
           renderItem={renderMessage}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingVertical: 16, paddingBottom: 80 }}

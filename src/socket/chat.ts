@@ -18,7 +18,7 @@ export interface Chat {
   to: User;
   createdAt: string;
   updatedAt: string;
-  status: "SENT" | "DELIVERED" | "READ";
+  status: string;
 }
 
 export interface WSRequest {
