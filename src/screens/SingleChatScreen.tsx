@@ -27,6 +27,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSingleChat } from "../socket/UseSingleChat";
 import { useSendChat } from "../socket/UseSendChat";
 import { Chat, User } from "../socket/chat";
+import { formatChatTime } from "../Util/DateFomatter";
 
 // Local UI helpers are derived from the Chat model returned by the socket hook
 
@@ -182,6 +183,15 @@ export default function SingleChatScreen({
       ? require("../../assets/patternDark.png")
       : require("../../assets/patternLight.png");
 
+  const headerSubtitle = (() => {
+    if (friend?.status === "ONLINE") {
+      return "Online";
+    }
+    const last = friend?.updatedAt ?? lastSeenTime;
+    if (!last) return "";
+    return `Last seen ${formatChatTime(last)}`;
+  })();
+
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-[#0f1828]">
       <StatusBar
@@ -210,9 +220,11 @@ export default function SingleChatScreen({
               <Text className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {friendName}
               </Text>
-              <Text className="text-sm text-gray-500 dark:text-gray-400">
-                Last seen {lastSeenTime}
-              </Text>
+              {headerSubtitle !== "" && (
+                <Text className="text-sm text-gray-500 dark:text-gray-400">
+                  {headerSubtitle}
+                </Text>
+              )}
             </View>
           </View>
         </View>

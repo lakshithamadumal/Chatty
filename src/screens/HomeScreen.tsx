@@ -19,7 +19,7 @@ import { RootStack } from "../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useChatList } from "../socket/UseChatList";
-import { formatChatTime } from "../Util/DateFomatter";
+import { formatChatTime, formatChatListTime } from "../Util/DateFomatter";
 
 interface ChatItem {
   id: string;
@@ -85,7 +85,7 @@ export default function HomeScreen() {
         </Text>
       </View>
       <Text className="text-xs text-gray-400 dark:text-gray-500">
-        {formatChatTime(item.timestamp)}
+        {formatChatListTime(item.timestamp)}
       </Text>
     </TouchableOpacity>
   );

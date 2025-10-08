@@ -23,9 +23,13 @@ export function useSingleChat(friendId: number) {
         setMessage(response.payload);
       }
 
-      if (response.type === "friend_data") {
+      // Support both legacy and current response types for friend data
+      if (
+        response.type === "get_friend_data" ||
+        response.type === "friend_data"
+      ) {
         console.log(response.payload);
-        setFriend(response.payload);
+        setFriend(response.payload as User);
       }
 
       if (response.type === "new_message") {
