@@ -19,6 +19,7 @@ import { RootStack } from "../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useChatList } from "../socket/UseChatList";
+import InitialsAvatar from "../components/InitialsAvatar";
 import { formatChatTime, formatChatListTime } from "../Util/DateFomatter";
 
 interface ChatItem {
@@ -62,10 +63,7 @@ export default function HomeScreen() {
       }}
     >
       <View className="relative">
-        <Image
-          source={{ uri: item.avatar }}
-          className="w-12 h-12 rounded-full"
-        />
+        <InitialsAvatar name={item.name} uri={item.avatar} size={48} className="w-12 h-12" />
         {(item.unreadCount ?? 0) > 0 && (
           <View className="absolute -top-1 -right-1 bg-[#D2D5F9] dark:bg-[#4A61D1] rounded-full w-5 h-5 items-center justify-center">
             <Text className="text-[#001A83] dark:text-white text-xs font-semibold">

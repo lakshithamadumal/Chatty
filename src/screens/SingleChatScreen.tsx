@@ -28,6 +28,7 @@ import { useSingleChat } from "../socket/UseSingleChat";
 import { useSendChat } from "../socket/UseSendChat";
 import { Chat, User } from "../socket/chat";
 import { formatChatTime } from "../Util/DateFomatter";
+import InitialsAvatar from "../components/InitialsAvatar";
 
 // Local UI helpers are derived from the Chat model returned by the socket hook
 
@@ -217,12 +218,7 @@ export default function SingleChatScreen({
             />
           </Pressable>
           <View className="flex-row items-center">
-            <Image
-              source={{
-                uri: profileImage,
-              }}
-              className="w-10 h-10 rounded-full"
-            />
+            <InitialsAvatar name={friendName} uri={profileImage} size={40} className="w-10 h-10" />
             <View className="ml-3">
               <Text className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {friendName}
