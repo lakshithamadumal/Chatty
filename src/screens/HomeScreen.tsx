@@ -63,7 +63,12 @@ export default function HomeScreen() {
       }}
     >
       <View className="relative">
-        <InitialsAvatar name={item.name} uri={item.avatar} size={48} className="w-12 h-12" />
+        <InitialsAvatar
+          name={item.name}
+          uri={item.avatar}
+          size={48}
+          className="w-12 h-12"
+        />
         {(item.unreadCount ?? 0) > 0 && (
           <View className="absolute -top-1 -right-1 bg-[#D2D5F9] dark:bg-[#4A61D1] rounded-full w-5 h-5 items-center justify-center">
             <Text className="text-[#001A83] dark:text-white text-xs font-semibold">
@@ -168,6 +173,7 @@ export default function HomeScreen() {
             shadowRadius: 8,
             elevation: 8,
           }}
+          onPress={() => navigation.navigate("NewChatScreen")}
         >
           <MaterialIcons name="edit" size={24} color="white" />
         </Pressable>

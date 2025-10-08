@@ -14,6 +14,7 @@ import HomeTabs from "./HomeTabs";
 import ChatScreen from "./src/screens/SingleChatScreen";
 import SingleChatScreen from "./src/screens/SingleChatScreen";
 import { WebSocketProvider } from "./src/socket/WebSocketProvider";
+import NewChatScreen from "./src/screens/NewChatScreen";
 
 export type RootStack = {
   SplashScreen: undefined;
@@ -23,6 +24,7 @@ export type RootStack = {
   HomeScreen: undefined;
   ProfileScreen: undefined;
   SettingScreen: undefined;
+  NewChatScreen: undefined;
   SingleChatScreen: {
     chatId: number;
     friendName: string;
@@ -47,11 +49,11 @@ export default function App() {
               <Stack.Screen name="SplashScreen" component={SplashScreen} />
               <Stack.Screen name="ContactScreen" component={ContactScreen} />
               <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-
               <Stack.Screen name="LoginScreen" component={LoginScreen} />
-
               <Stack.Screen name="HomeScreen" component={HomeTabs} />
               <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+              <Stack.Screen name="SettingScreen" component={SettingScreen} />
+              <Stack.Screen name="NewChatScreen" component={NewChatScreen} />
               <Stack.Screen
                 name="SingleChatScreen"
                 component={SingleChatScreen}
