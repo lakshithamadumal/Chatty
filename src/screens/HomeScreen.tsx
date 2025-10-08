@@ -90,8 +90,13 @@ export default function HomeScreen() {
     </TouchableOpacity>
   );
 
-  // Search filter
-  const filteredChats = adaptedChats.filter((chat) => {
+  // Sort by most recent timestamp (newest first)
+  const sortedChats = [...adaptedChats].sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  );
+
+  // Search filter (preserves sorted order)
+  const filteredChats = sortedChats.filter((chat) => {
     return (
       chat.name.toLowerCase().includes(search.toLowerCase()) ||
       chat.lastMessage.toLowerCase().includes(search.toLowerCase())

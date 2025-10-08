@@ -166,11 +166,18 @@ export default function SingleChatScreen({
               {timeText}
             </Text>
             {!isFromFriend && item.status && (
-              <Ionicons
-                name={item.status === "read" ? "checkmark-done" : "checkmark"}
-                size={14}
-                color={item.status === "read" ? "#BFD1FF" : "#9CA3AF"}
-              />
+              (() => {
+                const normalized = String(item.status).toUpperCase();
+                const isRead = normalized === "READ";
+                const isDelivered = normalized === "DELIVERED";
+                const iconName = isDelivered || isRead ? ("checkmark-done" as const) : ("checkmark" as const);
+                const iconColor = isRead
+                  ? (applied === "dark" ? "#BFD1FF" : "#4A61D1")
+                  : (applied === "dark" ? "#64748B" : "#9CA3AF");
+                return (
+                  <Ionicons name={iconName} size={14} color={iconColor} />
+                );
+              })()
             )}
           </View>
         </View>
