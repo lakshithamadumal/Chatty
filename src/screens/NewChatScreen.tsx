@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  Share,
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { User } from "../socket/chat";
@@ -173,42 +174,63 @@ export default function NewChatScreen() {
         </View>
       </View>
 
-      {/* New Contact */}
+      {/*invite banner */}
       <TouchableOpacity
-        onPress={() => navigation.navigate("NewContactScreen")}
-        activeOpacity={0.85}
-        className="flex-row items-center mx-4 mb-4 px-4 py-3 rounded-xl"
+        activeOpacity={0.92}
+        className="mx-4 mb-4 px-4 py-4 rounded-xl flex-row items-center"
         style={{
-          backgroundColor:
-            applied === "dark"
-              ? "#6B82FF" // softer bluish for dark
-              : "rgba(74, 97, 209, 0.15)", // light lavender for light theme
+          backgroundColor: applied === "dark" ? "#0f1724" : "#EEF2FF",
+          borderWidth: 1,
+          borderColor: applied === "dark" ? "#1f2937" : "rgba(74,97,209,0.12)",
+        }}
+        onPress={async () => {
+          try {
+            await Share.share({
+              message:
+                "Join me on Chatty! Fast, simple, private — download the app and start chatting.",
+            });
+          } catch (e) {
+            console.log("Share error", e);
+          }
         }}
       >
         <View
-          className="w-10 h-10 rounded-full items-center justify-center"
+          className="w-12 h-12 rounded-full items-center justify-center"
           style={{
             backgroundColor:
               applied === "dark"
-                ? "rgba(255,255,255,0.15)" // subtle white tint
-                : "rgba(74, 97, 209, 0.25)", // soft bluish tint
+                ? "rgba(107,130,255,0.12)"
+                : "rgba(74,97,209,0.18)",
           }}
         >
-          <Feather
-            name="user-plus"
-            size={20}
-            color={applied === "dark" ? "#FFFFFF" : "#4A61D1"}
-          />
+          <Text style={{ fontSize: 22 }}>🎉</Text>
         </View>
 
-        <Text
-          className="text-base font-semibold ml-3"
-          style={{
-            color: applied === "dark" ? "#FFFFFF" : "#4A61D1",
-          }}
-        >
-          Add someone to your contacts
-        </Text>
+        <View className="flex-1 ml-3">
+          <Text
+            className="text-base font-semibold"
+            style={{ color: applied === "dark" ? "#F1F5F9" : "#0F172A" }}
+          >
+            Invite your friends
+          </Text>
+          <Text
+            className="text-sm mt-0.5"
+            style={{ color: applied === "dark" ? "#94A3B8" : "#475569" }}
+          >
+            Share Chatty and stay connected — fast, simple, private.
+          </Text>
+        </View>
+
+        <View>
+          <View
+            className="px-3 py-1 rounded-full items-center justify-center"
+            style={{
+              backgroundColor: applied === "dark" ? "#4A61D1" : "#4A61D1",
+            }}
+          >
+            <Text style={{ color: "#fff", fontWeight: "600" }}>Invite</Text>
+          </View>
+        </View>
       </TouchableOpacity>
 
       {/* Contact List */}
