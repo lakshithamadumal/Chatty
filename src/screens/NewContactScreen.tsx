@@ -314,6 +314,14 @@ export default function NewContactScreen() {
                   });
                 } else {
                   sendData();
+                    console.log("New contact input:", {
+                    firstName,
+                    lastName,
+                    countryCode,
+                    callingCode,
+                    contactNo,
+                    });
+                    console.log("responseText", responseText);
                 }
               }}
             >
