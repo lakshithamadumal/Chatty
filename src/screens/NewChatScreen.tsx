@@ -66,8 +66,22 @@ export default function NewChatScreen() {
         <Text className="text-base font-semibold text-gray-900 dark:text-gray-100">
           {item.firstName} {item.lastName}
         </Text>
-        <Text className="text-[13px] text-green-600 dark:text-green-400 mt-0.5">
-          Already in friend list • Message now
+        <Text
+          className="text-[13px] mt-0.5"
+          style={{
+            color:
+              item.status === "ACTIVE"
+                ? applied === "dark"
+                  ? "#34D399" // dark: softer emerald
+                  : "#059669" // light: stronger emerald
+                : applied === "dark"
+                  ? "#94A3B8" // dark: muted slate
+                  : "#6B7280", // light: muted gray
+          }}
+        >
+          {item.status === "ACTIVE"
+            ? "Already in friend list • Message now"
+            : "Hey there! I am using Chatty"}
         </Text>
         <Text className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
           {item.countryCode}
