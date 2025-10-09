@@ -116,6 +116,14 @@ export default function NewChatScreen() {
         translucent
       />
 
+      <View className="absolute top-10 left-0 w-40 h-40">
+        <View className="absolute -top-20 -left-20 w-60 h-60 bg-[#4A61D1] dark:bg-[#6B82FF] rounded-full opacity-10" />
+      </View>
+
+      <View className="absolute bottom-0 right-0 w-60 h-60">
+        <View className="absolute -bottom-20 -right-20 w-60 h-60 bg-[#4A61D1] dark:bg-[#6B82FF] rounded-full opacity-5" />
+      </View>
+
       {/* Header */}
       <View className="px-4 pt-2 pb-3 flex-row items-center justify-between">
         <TouchableOpacity
