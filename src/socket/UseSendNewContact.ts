@@ -38,5 +38,5 @@ export function useSendNewContact() {
       socket.removeEventListener("message", onMessage);
     };
   }, [socket]);
-  return { sendNewContact: sendNewContact, responseText: responseText };
+  return { sendNewContact: sendNewContact, responseText: responseText };   
 }

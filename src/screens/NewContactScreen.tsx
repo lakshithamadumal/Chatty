@@ -32,6 +32,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { useSendNewContact } from "../socket/UseSendNewContact";
 
 export default function NewContactScreen() {
   const navigation =
@@ -45,23 +46,25 @@ export default function NewContactScreen() {
   const [contactNo, setContactNo] = useState("");
   const [callingCode, setCallingCode] = useState<string>("+94"); // <-- added
 
+  const newContact = useSendNewContact();
+  const sendNewContact = newContact.sendNewContact;
+  const responseText = newContact.responseText;
+
   const sendData = () => {
-    const newContact = {
+    const sendNewContact = {
       id: 0,
       firstName: firstName,
       lastName: lastName,
-      countryCode: callingCode, // <-- use calling code (+94) instead of "LK"
+      countryCode: callingCode,
       contactNo: contactNo,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      status: "active",
+      createdAt: "",
+      updatedAt: "",
+      status: "",
     };
 
-    console.log("sendNewContact", newContact);
     setFirstName("");
     setLastName("");
-    setCountryCode("LK");
-    setCallingCode("+94"); // <-- reset calling code
+    setCallingCode("+94");
     setContactNo("");
   };
 
