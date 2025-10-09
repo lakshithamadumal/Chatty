@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import "../../global.css";
@@ -39,6 +40,8 @@ export default function HomeScreen() {
   const [search, setSearch] = useState("");
 
   const chatList = useChatList();
+
+  const [isModelVisible, setIsModalVisible] = useState(false);
 
   // Adapt socket Chat model to local ChatItem shape expected by the UI
   const adaptedChats: ChatItem[] = chatList.map((chat) => ({
@@ -122,7 +125,12 @@ export default function HomeScreen() {
         <Text className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           Chats
         </Text>
-        <Pressable className="p-2">
+        <Pressable
+          className="p-2"
+          onPress={() => {
+            setIsModalVisible(true); 
+          }}
+        >
           <MaterialIcons
             name="menu"
             size={24}
@@ -178,6 +186,158 @@ export default function HomeScreen() {
           <MaterialIcons name="edit" size={24} color="white" />
         </Pressable>
       </View>
+
+      {/* iOS-style dropdown menu */}
+      <Modal
+        animationType="fade"
+        transparent
+        visible={isModelVisible}
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <Pressable
+          onPress={() => setIsModalVisible(false)}
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.18)",
+          }}
+        >
+          <View
+            pointerEvents="box-none"
+            style={{
+              flex: 1,
+            }}
+          >
+            {/* container aligned to top-right under header */}
+            <View
+              style={{
+                position: "absolute",
+                top: 56, // adjust if header height differs
+                right: 12,
+                width: 200,
+                borderRadius: 12,
+                overflow: "hidden",
+                backgroundColor: applied === "dark" ? "#0b1220" : "#ffffff",
+                shadowColor: "#000",
+                shadowOpacity: applied === "dark" ? 0.35 : 0.12,
+                shadowRadius: 12,
+                shadowOffset: { width: 0, height: 6 },
+                elevation: 12,
+                borderWidth: applied === "dark" ? 0.5 : 0.5,
+                borderColor: applied === "dark" ? "rgba(255,255,255,0.03)" : "rgba(15,24,40,0.04)",
+              }}
+            >
+              {/* small top indicator like iOS popover */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: -8,
+                  right: 20,
+                  width: 16,
+                  height: 8,
+                }}
+              >
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: 0,
+                    height: 0,
+                    borderLeftWidth: 8,
+                    borderRightWidth: 8,
+                    borderBottomWidth: 8,
+                    borderLeftColor: "transparent",
+                    borderRightColor: "transparent",
+                    borderBottomColor: applied === "dark" ? "#0b1220" : "#ffffff",
+                    transform: [{ translateY: 0 }],
+                  }}
+                />
+              </View>
+
+              <Pressable
+                onPress={() => {
+                  setIsModalVisible(false);
+                  navigation.navigate("ProfileScreen");
+                }}
+                android_ripple={{ color: applied === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.06)" }}
+                style={{
+                  paddingHorizontal: 14,
+                  paddingVertical: 12,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <Feather
+                  name="user"
+                  size={18}
+                  color={applied === "dark" ? "#F1F5F9" : "#0F172A"}
+                />
+                <Text style={{ color: applied === "dark" ? "#F1F5F9" : "#0F172A", fontSize: 15 }}>
+                  Profile
+                </Text>
+              </Pressable>
+
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: applied === "dark" ? "rgba(255,255,255,0.02)" : "rgba(15,24,40,0.04)",
+                }}
+              />
+
+              <Pressable
+                onPress={() => {
+                  setIsModalVisible(false);
+                  navigation.navigate("SettingScreen");
+                }}
+                android_ripple={{ color: applied === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.06)" }}
+                style={{
+                  paddingHorizontal: 14,
+                  paddingVertical: 12,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <Feather
+                  name="settings"
+                  size={18}
+                  color={applied === "dark" ? "#94A3B8" : "#374151"}
+                />
+                <Text style={{ color: applied === "dark" ? "#94A3B8" : "#374151", fontSize: 15 }}>
+                  Setting
+                </Text>
+              </Pressable>
+
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: applied === "dark" ? "rgba(255,255,255,0.02)" : "rgba(15,24,40,0.04)",
+                }}
+              />
+
+              <Pressable
+                onPress={() => {
+                  console.log("Logout pressed");
+                  setIsModalVisible(false);
+                  navigation.replace("SplashScreen");
+                }}
+                android_ripple={{ color: "rgba(239,68,68,0.06)" }}
+                style={{
+                  paddingHorizontal: 14,
+                  paddingVertical: 12,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <MaterialIcons name="logout" size={18} color="#ef4444" />
+                <Text style={{ color: "#ef4444", fontSize: 15 }}>Logout</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 }
