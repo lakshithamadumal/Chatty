@@ -144,13 +144,6 @@ export default function NewChatScreen() {
             {users.length} contacts
           </Text>
         </View>
-        <TouchableOpacity className="p-2">
-          <Ionicons
-            name="ellipsis-vertical"
-            size={20}
-            color={applied === "dark" ? "#D1D5DB" : "#4B5563"}
-          />
-        </TouchableOpacity>
       </View>
 
       {/* Search Bar */}

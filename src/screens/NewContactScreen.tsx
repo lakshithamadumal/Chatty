@@ -21,6 +21,13 @@ import CountryPicker, {
   Country,
   CountryCode,
 } from "react-native-country-picker-modal";
+import {
+  isValidFirstName,
+  isValidLastName,
+  isValidCountryCode,
+  isValidPhoneNumber,
+} from "../Util/Validation";
+import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 
 export default function NewContactScreen() {
   const navigation =
@@ -32,6 +39,27 @@ export default function NewContactScreen() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [contactNo, setContactNo] = useState("");
+  const [callingCode, setCallingCode] = useState<string>("+94"); // <-- added
+
+  const sendData = () => {
+    const newContact = {
+      id: 0,
+      firstName: firstName,
+      lastName: lastName,
+      countryCode: callingCode, // <-- use calling code (+94) instead of "LK"
+      contactNo: contactNo,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: "active",
+    };
+
+    console.log("sendNewContact", newContact);
+    setFirstName("");
+    setLastName("");
+    setCountryCode("LK");
+    setCallingCode("+94"); // <-- reset calling code
+    setContactNo("");
+  };
 
   // Animations
   const orb1Scale = useRef(new Animated.Value(1)).current;
@@ -194,11 +222,16 @@ export default function NewContactScreen() {
               countryCode={countryCode}
               withFilter
               withFlag
-              withCallingCodeButton
+              withCallingCode
               withEmoji
               onSelect={(c) => {
                 setCountryCode(c.cca2);
                 setCountry(c);
+                setCallingCode(
+                  c.callingCode && c.callingCode.length
+                    ? `+${c.callingCode[0]}`
+                    : "+94"
+                );
               }}
               containerButtonStyle={{
                 backgroundColor: applied === "dark" ? "#152033" : "#F4F6FA",
@@ -214,6 +247,12 @@ export default function NewContactScreen() {
                   applied === "dark" ? "#f1f5f9" : "#152033",
               }}
             />
+            <Text
+              className="text-sm mr-2"
+              style={{ color: applied === "dark" ? "#94A3B8" : "#374151" }}
+            >
+              {callingCode}
+            </Text>
             <TextInput
               placeholder="Contact Number"
               placeholderTextColor="#9CA3AF"
@@ -229,7 +268,40 @@ export default function NewContactScreen() {
         <View className="mt-12 relative">
           <Pressable
             className="h-14 rounded-full bg-blue-600 items-center justify-center shadow-lg shadow-blue-500/30"
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              const firstNameValid = isValidFirstName(firstName);
+              const lastNameValid = isValidLastName(lastName);
+              const countryCodeValid = isValidCountryCode(callingCode);
+              const phoneNoValid = isValidPhoneNumber(contactNo);
+
+              if (firstNameValid) {
+                Dialog.show({
+                  type: ALERT_TYPE.WARNING,
+                  title: "Warning",
+                  textBody: firstNameValid,
+                });
+              } else if (lastNameValid) {
+                Dialog.show({
+                  type: ALERT_TYPE.WARNING,
+                  title: "Warning",
+                  textBody: lastNameValid,
+                });
+              } else if (countryCodeValid) {
+                Dialog.show({
+                  type: ALERT_TYPE.WARNING,
+                  title: "Warning",
+                  textBody: countryCodeValid,
+                });
+              } else if (phoneNoValid) {
+                Dialog.show({
+                  type: ALERT_TYPE.WARNING,
+                  title: "Warning",
+                  textBody: phoneNoValid,
+                });
+              } else {
+                sendData();
+              }
+            }}
           >
             <Text className="text-white font-semibold text-base">
               Save Contact
