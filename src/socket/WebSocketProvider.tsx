@@ -32,13 +32,13 @@ export const WebSocketProvider: React.FC<{
     socketRef.current = socket;
 
     socket.onopen = () => {
-      console.log(new Date().getTime());
+      console.log(new Date().toLocaleString());
       console.log("WebSocket connected...");
       setConnected(true);
     };
 
     socket.onclose = () => {
-      console.log(new Date().getTime());
+      console.log(new Date().toLocaleString());
       console.log("WebSocket disconnected...");
       setConnected(false);
     };
