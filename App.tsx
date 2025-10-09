@@ -37,7 +37,7 @@ export type RootStack = {
 const Stack = createNativeStackNavigator<RootStack>();
 
 function Chatty() {
-  useWebSocketPing(3000);
+  useWebSocketPing(4000 * 60);
   return (
     <ThemeProvider>
       <UserRegistrationProvider>
