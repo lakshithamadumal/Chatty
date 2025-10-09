@@ -120,9 +120,15 @@ export default function NewContactScreen() {
     ]).start();
 
     return () => {
+      // stop pulse loops
       pulse1.stop();
       pulse2.stop();
       pulse3.stop();
+      // stop other running animations / animated values
+      bubble1Scale.stopAnimation();
+      bubble2Scale.stopAnimation();
+      dot1Opacity.stopAnimation();
+      dot2Opacity.stopAnimation();
     };
   }, []);
 
