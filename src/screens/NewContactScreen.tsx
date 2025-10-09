@@ -51,17 +51,17 @@ export default function NewContactScreen() {
   const responseText = newContact.responseText;
 
   const sendData = () => {
-    const sendNewContact = {
+    sendNewContact({
       id: 0,
       firstName: firstName,
       lastName: lastName,
       countryCode: callingCode,
       contactNo: contactNo,
+      profileImage: "",
       createdAt: "",
       updatedAt: "",
       status: "",
-    };
-
+    });
     setFirstName("");
     setLastName("");
     setCallingCode("+94");
