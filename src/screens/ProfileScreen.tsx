@@ -29,7 +29,7 @@ export default function ProfileScreen() {
     firstName: "Lakshitha",
     lastName: "Madumal",
     contactNumber: "+94 71 265 4117",
-    profilePicture: "https://i.pravatar.cc/150?img=12",
+    profilePicture: "https://iamlaky.online/assets/profile.jpg",
   });
 
   const [isEditing, setIsEditing] = useState(false);

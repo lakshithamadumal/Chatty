@@ -15,10 +15,12 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import "../../global.css";
+import InitialsAvatar from "../components/InitialsAvatar";
+import { useUserRegistration } from "../components/UserContext";
 
 export default function SettingScreen() {
-  const { applied } = useTheme();
-  const [themeMode, setThemeMode] = useState("system");
+  const { applied, preference, setPreference } = useTheme();
+  const { userData } = useUserRegistration();
   const navigation = useNavigation();
 
   // Orb animations
@@ -161,7 +163,7 @@ export default function SettingScreen() {
           <View className="relative">
             <Image
               source={{
-                uri: "https://i.pravatar.cc/150?img=12",
+                uri: "https://iamlaky.online/assets/profile.jpg",
               }}
               className="w-20 h-20 rounded-2xl"
             />
@@ -196,24 +198,24 @@ export default function SettingScreen() {
           <View className="rounded-3xl overflow-hidden">
             <ThemeOption
               label="Light Mode"
-              selected={themeMode === "light"}
-              onPress={() => setThemeMode("light")}
+              selected={preference === "light"}
+              onPress={() => setPreference("light")}
               emoji="☀️"
               description="Bright and clean"
             />
             <View className="h-px bg-slate-200 dark:bg-slate-700" />
             <ThemeOption
               label="Dark Mode"
-              selected={themeMode === "dark"}
-              onPress={() => setThemeMode("dark")}
+              selected={preference === "dark"}
+              onPress={() => setPreference("dark")}
               emoji="🌙"
               description="Easy on the eyes"
             />
             <View className="h-px bg-slate-200 dark:bg-slate-700" />
             <ThemeOption
               label="System Default"
-              selected={themeMode === "system"}
-              onPress={() => setThemeMode("system")}
+              selected={preference === "system"}
+              onPress={() => setPreference("system")}
               emoji="🖥️"
               description="Follow device setting"
             />
