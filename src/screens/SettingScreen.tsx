@@ -11,13 +11,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../theme/ThemeProvider";
-import Feather from "@expo/vector-icons/Feather";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import "../../global.css";
-
-const { width, height } = Dimensions.get("window");
 
 export default function SettingScreen() {
   const { applied } = useTheme();
@@ -83,15 +80,15 @@ export default function SettingScreen() {
               onPress={() => navigation.goBack()}
               className="w-12 h-12 rounded-2xl items-center justify-center active:scale-95 transition-all"
             >
-              <AntDesign
-                name="left"
+              <Ionicons
+                name="arrow-back-sharp"
                 size={22}
                 color={applied === "dark" ? "#F1F5F9" : "#0F1828"}
               />
             </Pressable>
 
             <Text
-              className="ml-4 text-2xl font-bold"
+              className="ml-2 text-2xl font-bold"
               style={{ color: applied === "dark" ? "#F1F5F9" : "#0F1828" }}
             >
               Settings
@@ -102,8 +99,20 @@ export default function SettingScreen() {
           <Pressable
             onPress={() => console.log("Logout Pressed")}
             className="w-12 h-12 rounded-2xl items-center justify-center active:scale-95 transition-all"
+            style={{
+              backgroundColor: applied === "dark" ? "#0F172A" : "#FEE2E2", // Dark navy vs soft red tint
+              borderWidth: 1,
+              shadowColor: applied === "dark" ? "#000" : "#fca5a5",
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 3,
+            }}
           >
-            <Feather name="log-out" size={20} color="#EF4444" />
+            <Feather
+              name="log-out"
+              size={20}
+              color={applied === "dark" ? "#EF4444" : "#DC2626"} // soft red for dark, strong red for light
+            />
           </Pressable>
         </View>
       </View>
@@ -208,50 +217,6 @@ export default function SettingScreen() {
               description="Follow device setting"
             />
           </View>
-        </View>
-
-        {/* Invite Friend Banner with Orbs */}
-        <View className="mb-6 relative overflow-hidden rounded-3xl flex-1">
-          {/* Banner Background Orbs */}
-          <View className="absolute inset-0">
-            <Animated.View
-              style={{
-                transform: [{ scale: orb3Scale }],
-                backgroundColor: "rgba(255,255,255,0.15)",
-              }}
-              className="absolute w-40 h-40 rounded-full -top-10 -right-10"
-            />
-            <Animated.View
-              style={{
-                transform: [{ scale: orb4Scale }],
-                backgroundColor: "rgba(255,255,255,0.1)",
-              }}
-              className="absolute w-32 h-32 rounded-full -bottom-8 -left-8"
-            />
-          </View>
-
-          <LinearGradient
-            colors={
-              applied === "dark"
-                ? ["#6366f1", "#3b82f6"]
-                : ["#4f46e5", "#3b82f6"]
-            }
-            className="p-6 flex-row items-center justify-between flex-1"
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
-            <View className="flex-1">
-              <Text className="text-white font-bold text-xl mb-1">
-                Invite Friends 💌
-              </Text>
-              <Text className="text-blue-100 text-sm">
-                Share the experience with your friends
-              </Text>
-            </View>
-            <View className="w-12 h-12 bg-white/20 rounded-2xl items-center justify-center">
-              <Feather name="share-2" size={24} color="white" />
-            </View>
-          </LinearGradient>
         </View>
 
         {/* Pro Version Banner with Blue Verify Badge */}
