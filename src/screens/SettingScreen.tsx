@@ -145,7 +145,9 @@ export default function SettingScreen() {
       <View className="flex-1 px-6 pt-4">
         {/* Profile Section */}
         <Pressable
-          onPress={() => console.log("Profile clicked")}
+          onPress={() => {
+            navigation.navigate("ProfileScreen" as never);
+          }}
           className={`flex-row items-center rounded-3xl p-6 mb-8 ${
             applied === "dark" ? "bg-[#152033]" : "bg-white"
           }`}
