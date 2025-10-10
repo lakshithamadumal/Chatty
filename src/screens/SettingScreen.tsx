@@ -101,7 +101,6 @@ export default function SettingScreen() {
             className="w-12 h-12 rounded-2xl items-center justify-center active:scale-95 transition-all"
             style={{
               backgroundColor: applied === "dark" ? "#0F172A" : "#FEE2E2", // Dark navy vs soft red tint
-              borderWidth: 1,
               shadowColor: applied === "dark" ? "#000" : "#fca5a5",
               shadowOpacity: 0.2,
               shadowRadius: 4,
