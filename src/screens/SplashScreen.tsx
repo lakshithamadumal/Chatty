@@ -71,7 +71,7 @@ export default function SplashScreen() {
     // Navigate after 3 seconds
     const timer = setTimeout(() => {
       navigation.navigate("InfoScreen");
-    }, 4000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [navigation, opacity, scale, translateY, dot1, dot2, dot3]);

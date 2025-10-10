@@ -48,7 +48,7 @@ function Chatty() {
         <UserRegistrationProvider>
           <NavigationContainer>
             <Stack.Navigator
-              initialRouteName="HomeScreen"
+              initialRouteName="SplashScreen"
               screenOptions={{ headerShown: false }}
             >
               <Stack.Screen name="SplashScreen" component={SplashScreen} />

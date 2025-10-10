@@ -361,9 +361,9 @@ export default function SignUpScreen() {
                   // Account Creating
                   setLoading(true);
                   const response = await createNewAccount(userData);
-                  console.log(response);
+                  console.log("SignUp response:", response);
 
-                  if (response.status) {
+                  if (response && response.status) {
                     Dialog.show({
                       type: ALERT_TYPE.SUCCESS,
                       title: "Success",
@@ -379,7 +379,7 @@ export default function SignUpScreen() {
                     Dialog.show({
                       type: ALERT_TYPE.WARNING,
                       title: "Warning",
-                      textBody: response.message,
+                      textBody: response?.message || "Failed to create account",
                       button: "close",
                     });
                   }
