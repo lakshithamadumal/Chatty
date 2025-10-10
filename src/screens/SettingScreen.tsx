@@ -17,7 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import "../../global.css";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 export default function SettingScreen() {
   const { applied } = useTheme();
@@ -57,12 +57,12 @@ export default function SettingScreen() {
     const p2 = pulse(orb2Scale, 1500);
     const p3 = pulse(orb3Scale, 3000);
     const p4 = pulse(orb4Scale, 4500);
-    
+
     p1.start();
     p2.start();
     p3.start();
     p4.start();
-    
+
     return () => {
       p1.stop();
       p2.stop();
@@ -82,13 +82,9 @@ export default function SettingScreen() {
             <Pressable
               onPress={() => navigation.goBack()}
               className="w-12 h-12 rounded-2xl items-center justify-center active:scale-95 transition-all"
-              style={{
-                backgroundColor:
-                  applied === "dark" ? "#1e293b" : "rgba(74,97,209,0.08)",
-              }}
             >
               <AntDesign
-                name="arrowleft"
+                name="left"
                 size={22}
                 color={applied === "dark" ? "#F1F5F9" : "#0F1828"}
               />
@@ -106,9 +102,6 @@ export default function SettingScreen() {
           <Pressable
             onPress={() => console.log("Logout Pressed")}
             className="w-12 h-12 rounded-2xl items-center justify-center active:scale-95 transition-all"
-            style={{
-              backgroundColor: applied === "dark" ? "#431313" : "#FEE2E2",
-            }}
           >
             <Feather name="log-out" size={20} color="#EF4444" />
           </Pressable>
@@ -132,30 +125,10 @@ export default function SettingScreen() {
             transform: [{ scale: orb2Scale }],
             backgroundColor:
               applied === "dark"
-                ? "rgba(16,185,129,0.08)"
-                : "rgba(16,185,129,0.05)",
-          }}
-          className="absolute w-72 h-72 rounded-full -bottom-24 -right-24"
-        />
-        <Animated.View
-          style={{
-            transform: [{ scale: orb3Scale }],
-            backgroundColor:
-              applied === "dark"
                 ? "rgba(168,85,247,0.1)"
                 : "rgba(168,85,247,0.04)",
           }}
-          className="absolute w-64 h-64 rounded-full top-1/3 -right-16"
-        />
-        <Animated.View
-          style={{
-            transform: [{ scale: orb4Scale }],
-            backgroundColor:
-              applied === "dark"
-                ? "rgba(245,158,11,0.08)"
-                : "rgba(245,158,11,0.04)",
-          }}
-          className="absolute w-56 h-56 rounded-full bottom-1/3 -left-20"
+          className="absolute w-72 h-72 rounded-full -bottom-24 -right-24"
         />
       </View>
 
@@ -197,10 +170,10 @@ export default function SettingScreen() {
               Tap to edit profile
             </Text>
           </View>
-          <Feather 
-            name="chevron-right" 
-            size={20} 
-            color={applied === "dark" ? "#64748b" : "#94a3b8"} 
+          <Feather
+            name="chevron-right"
+            size={20}
+            color={applied === "dark" ? "#64748b" : "#94a3b8"}
           />
         </Pressable>
 
@@ -256,10 +229,12 @@ export default function SettingScreen() {
               className="absolute w-32 h-32 rounded-full -bottom-8 -left-8"
             />
           </View>
-          
+
           <LinearGradient
             colors={
-              applied === "dark" ? ["#6366f1", "#3b82f6"] : ["#4f46e5", "#3b82f6"]
+              applied === "dark"
+                ? ["#6366f1", "#3b82f6"]
+                : ["#4f46e5", "#3b82f6"]
             }
             className="p-6 flex-row items-center justify-between flex-1"
             start={{ x: 0, y: 0 }}
@@ -301,7 +276,9 @@ export default function SettingScreen() {
 
           <LinearGradient
             colors={
-              applied === "dark" ? ["#0ea5e9", "#2563eb"] : ["#06b6d4", "#3b82f6"]
+              applied === "dark"
+                ? ["#0ea5e9", "#2563eb"]
+                : ["#06b6d4", "#3b82f6"]
             }
             className="p-6"
             start={{ x: 0, y: 0 }}
@@ -318,12 +295,15 @@ export default function SettingScreen() {
                   </Text>
                 </View>
                 <Text className="text-blue-100 text-sm mb-4">
-                  Unlock exclusive features, blue verification badge, and premium support
+                  Unlock exclusive features, blue verification badge, and
+                  premium support
                 </Text>
                 <View className="flex-row items-center space-x-3">
                   <View className="flex-row items-center">
                     <Feather name="check-circle" size={14} color="#bbf7d0" />
-                    <Text className="text-blue-100 text-xs ml-1">Blue Badge</Text>
+                    <Text className="text-blue-100 text-xs ml-1">
+                      Blue Badge
+                    </Text>
                   </View>
                   <View className="flex-row items-center">
                     <Feather name="check-circle" size={14} color="#bbf7d0" />
@@ -348,10 +328,10 @@ export default function SettingScreen() {
             Designed and developed by
           </Text>
           <Text className="text-blue-500 dark:text-blue-400 font-bold text-lg">
-            {process.env.EXPO_PUBLIC_APP_OWNER ?? "Lakshitha Madumal"}
+            {process.env.EXPO_PUBLIC_APP_OWNER}
           </Text>
           <Text className="text-slate-400 dark:text-slate-500 text-xs mt-2">
-            Version 1.0.0
+            Version {process.env.EXPO_PUBLIC_APP_VERSION}
           </Text>
         </View>
       </View>
@@ -374,7 +354,7 @@ function ThemeOption({
   description?: string;
 }) {
   const { applied } = useTheme();
-  
+
   return (
     <Pressable
       onPress={onPress}
@@ -395,14 +375,14 @@ function ThemeOption({
           )}
         </View>
       </View>
-      <View className={`w-6 h-6 rounded-full border-2 items-center justify-center ${
-        selected
-          ? "border-blue-500 bg-blue-500"
-          : "border-slate-300 dark:border-slate-600"
-      }`}>
-        {selected && (
-          <Feather name="check" size={14} color="white" />
-        )}
+      <View
+        className={`w-6 h-6 rounded-full border-2 items-center justify-center ${
+          selected
+            ? "border-blue-500 bg-blue-500"
+            : "border-slate-300 dark:border-slate-600"
+        }`}
+      >
+        {selected && <Feather name="check" size={14} color="white" />}
       </View>
     </Pressable>
   );
