@@ -398,7 +398,7 @@ export default function SignUpScreen() {
                       Dialog.show({
                         type: ALERT_TYPE.WARNING,
                         title: "Warning",
-                        textBody: "Failed to get user ID from response",
+                        textBody: response?.message,
                         button: "close",
                       });
                     }

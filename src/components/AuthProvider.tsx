@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } finally {
         setTimeout(() => {
           setLoading(false);
-        }, 1000); // Reduced from 4000ms to 1000ms for better UX
+        }, 5000); // Reduced from 4000ms to 1000ms for better UX
       }
     };
     loadUser();
