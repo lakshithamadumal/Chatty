@@ -14,10 +14,12 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../../App";
 import { useTheme } from "../theme/ThemeProvider";
+import { useWebSocketPing } from "../socket/UseWebSocketPing";
 
 type Infoprops = NativeStackNavigationProp<RootStack, "InfoScreen">;
 
 export default function InfoScreen() {
+  useWebSocketPing(4000);
 
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.8);
