@@ -14,10 +14,13 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../../App";
 import { useTheme } from "../theme/ThemeProvider";
+import { useWebSocketPing } from "../socket/UseWebSocketPing";
 
 type props = NativeStackNavigationProp<RootStack, "SplashScreen">;
 
 export default function SplashScreen() {
+  useWebSocketPing(4000);
+
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.8);
   const dot1Opacity = useSharedValue(0);

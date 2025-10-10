@@ -16,6 +16,8 @@ import SingleChatScreen from "./src/screens/SingleChatScreen";
 import { WebSocketProvider } from "./src/socket/WebSocketProvider";
 import NewChatScreen from "./src/screens/NewChatScreen";
 import { useWebSocketPing } from "./src/socket/UseWebSocketPing";
+import { AuthContext, AuthProvider } from "./src/components/AuthProvider";
+import { useContext } from "react";
 
 export type RootStack = {
   SplashScreen: undefined;
@@ -37,39 +39,60 @@ export type RootStack = {
 const Stack = createNativeStackNavigator<RootStack>();
 
 function Chatty() {
-  useWebSocketPing(4000);
+  const auth = useContext(AuthContext);
   return (
-    <ThemeProvider>
-      <UserRegistrationProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="HomeScreen"
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="SplashScreen" component={SplashScreen} />
-            <Stack.Screen name="ContactScreen" component={ContactScreen} />
-            <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen name="HomeScreen" component={HomeTabs} />
-            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen name="SettingScreen" component={SettingScreen} />
-            <Stack.Screen name="NewChatScreen" component={NewChatScreen} />
-            <Stack.Screen
-              name="SingleChatScreen"
-              component={SingleChatScreen}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </UserRegistrationProvider>
-    </ThemeProvider>
+    <WebSocketProvider userId={1}>
+      <ThemeProvider>
+        <UserRegistrationProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="SplashScreen"
+              screenOptions={{ headerShown: false }}
+            >
+              {auth?.isLoading ? (
+                <Stack.Screen name="SplashScreen" component={SplashScreen} />
+              ) : auth?.userId === null ? (
+                <>
+                  <Stack.Screen
+                    name="ContactScreen"
+                    component={ContactScreen}
+                  />
+                  <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+                  <Stack.Screen name="LoginScreen" component={LoginScreen} />
+                </>
+              ) : (
+                <>
+                  <Stack.Screen name="HomeScreen" component={HomeTabs} />
+                  <Stack.Screen
+                    name="ProfileScreen"
+                    component={ProfileScreen}
+                  />
+                  <Stack.Screen
+                    name="SettingScreen"
+                    component={SettingScreen}
+                  />
+                  <Stack.Screen
+                    name="NewChatScreen"
+                    component={NewChatScreen}
+                  />
+                  <Stack.Screen
+                    name="SingleChatScreen"
+                    component={SingleChatScreen}
+                  />
+                </>
+              )}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </UserRegistrationProvider>
+      </ThemeProvider>
+    </WebSocketProvider>
   );
 }
 
 export default function App() {
-  const USER_ID = 1;
   return (
-    <WebSocketProvider userId={USER_ID}>
+    <AuthProvider>
       <Chatty />
-    </WebSocketProvider>
+    </AuthProvider>
   );
 }
