@@ -19,10 +19,15 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 import "../../global.css";
+import { RootStack } from "../../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type ProfileProps = NativeStackNavigationProp<RootStack, "ProfileScreen">;
 
 export default function ProfileScreen() {
+  const navigation = useNavigation<ProfileProps>();
+
   const { applied } = useTheme();
-  const navigation = useNavigation();
 
   // User state
   const [user, setUser] = useState({
@@ -150,7 +155,9 @@ export default function ProfileScreen() {
           style={{
             transform: [{ scale: orb1 }],
             backgroundColor:
-              applied === "dark" ? "rgba(59,130,246,0.10)" : "rgba(99,102,241,0.06)",
+              applied === "dark"
+                ? "rgba(59,130,246,0.10)"
+                : "rgba(99,102,241,0.06)",
           }}
           className="absolute w-96 h-96 rounded-full -top-20 -left-32"
         />
@@ -158,7 +165,9 @@ export default function ProfileScreen() {
           style={{
             transform: [{ scale: orb2 }],
             backgroundColor:
-              applied === "dark" ? "rgba(168,85,247,0.08)" : "rgba(14,165,233,0.06)",
+              applied === "dark"
+                ? "rgba(168,85,247,0.08)"
+                : "rgba(14,165,233,0.06)",
           }}
           className="absolute w-80 h-80 rounded-full -bottom-24 -right-24"
         />

@@ -21,26 +21,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const loadUser = async () => {
       try {
         const storedId = await AsyncStorage.getItem(USER_ID_KEY);
+        console.log("AuthProvider: Loaded userId from storage:", storedId);
         setUserId(storedId);
       } catch (error) {
-        console.warn("Error resotored userId", error);
+        console.warn("Error restored userId", error);
       } finally {
         setTimeout(() => {
           setLoading(false);
-        }, 4000);
+        }, 1000); // Reduced from 4000ms to 1000ms for better UX
       }
     };
     loadUser();
   }, []);
 
   const signUp = async (id: string) => {
+    console.log("AuthProvider: Storing userId:", id);
     await AsyncStorage.setItem(USER_ID_KEY, id);
     setUserId(id);
+    console.log("AuthProvider: userId stored successfully");
   };
 
   const signOut = async () => {
+    console.log("AuthProvider: Signing out user");
     await AsyncStorage.removeItem(USER_ID_KEY);
     setUserId(null);
+    console.log("AuthProvider: User signed out successfully");
   };
 
   // when calling this hook if dependencies are changed otherwise it get previous data

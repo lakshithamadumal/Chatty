@@ -22,7 +22,7 @@ import { useTheme } from "../theme/ThemeProvider";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../../App";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useUserRegistration } from "../components/UserContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
@@ -33,6 +33,7 @@ import {
   isvalidProfilePicture,
 } from "../Util/Validation";
 import { createNewAccount } from "../api/UserService";
+import { AuthContext } from "../components/AuthProvider";
 
 type SignupProps = NativeStackNavigationProp<RootStack, "SignUpScreen">;
 
@@ -156,6 +157,9 @@ export default function SignUpScreen() {
       setImage(result.assets[0].uri);
     }
   };
+
+  // Auth context
+  const auth = useContext(AuthContext);
 
   return (
     <AlertNotificationRoot>
@@ -364,17 +368,40 @@ export default function SignUpScreen() {
                   console.log("SignUp response:", response);
 
                   if (response && response.status) {
-                    Dialog.show({
-                      type: ALERT_TYPE.SUCCESS,
-                      title: "Success",
-                      textBody: "Account created successfully",
-                      button: "close",
-                    });
+                    const id = response.userId;
+                    if (auth && id) {
+                      // Show success dialog first
+                      Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        title: "Success",
+                        textBody: "Account created successfully",
+                        button: "close",
+                      });
 
-                    setTimeout(() => {
-                      Dialog.hide();
-                      navigation.replace("HomeScreen");
-                    }, 2000);
+                      // Wait for dialog to show, then store userId and navigate
+                      setTimeout(async () => {
+                        try {
+                          // Store userId in AuthProvider
+                          await auth.signUp(String(id));
+                          console.log("User signed up and stored in AuthProvider");
+                          
+                          // Hide dialog and let App.tsx handle navigation
+                          Dialog.hide();
+                          // The App.tsx will automatically navigate to HomeScreen 
+                          // because userId is now set in AuthProvider
+                        } catch (error) {
+                          console.error("Error storing userId:", error);
+                          Dialog.hide();
+                        }
+                      }, 2000);
+                    } else {
+                      Dialog.show({
+                        type: ALERT_TYPE.WARNING,
+                        title: "Warning",
+                        textBody: "Failed to get user ID from response",
+                        button: "close",
+                      });
+                    }
                   } else {
                     Dialog.show({
                       type: ALERT_TYPE.WARNING,

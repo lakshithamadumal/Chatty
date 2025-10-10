@@ -9,19 +9,31 @@ import {
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { useTheme } from "../theme/ThemeProvider";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import "../../global.css";
 import InitialsAvatar from "../components/InitialsAvatar";
+import { AuthContext } from "../components/AuthProvider";
 import { useUserRegistration } from "../components/UserContext";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Dialog,
+} from "react-native-alert-notification";
+import { RootStack } from "../../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type SettingProps = NativeStackNavigationProp<RootStack, "SettingScreen">;
 
 export default function SettingScreen() {
+  const navigation = useNavigation<SettingProps>();
+
   const { applied, preference, setPreference } = useTheme();
   const { userData } = useUserRegistration();
-  const navigation = useNavigation();
+  const auth = useContext(AuthContext);
 
   // Orb animations
   const orb1Scale = useRef(new Animated.Value(1)).current;
@@ -71,239 +83,308 @@ export default function SettingScreen() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-[#0f1828]">
-      <StatusBar hidden={true} />
+    <AlertNotificationRoot>
+      <SafeAreaView className="flex-1 bg-slate-50 dark:bg-[#0f1828]">
+        <StatusBar hidden={true} />
 
-      {/* Header with Logout */}
-      <View className="px-6 pb-6 pt-4 bg-white dark:bg-[#0f1828] border-b border-slate-200 dark:border-slate-800">
-        <View className="flex-row items-center justify-between">
-          <View className="flex-row items-center">
+        {/* Header with Logout */}
+        <View className="px-6 pb-6 pt-4 bg-white dark:bg-[#0f1828] border-b border-slate-200 dark:border-slate-800">
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center">
+              <Pressable
+                onPress={() => navigation.goBack()}
+                className="w-12 h-12 rounded-2xl items-center justify-center active:scale-95 transition-all"
+              >
+                <Ionicons
+                  name="arrow-back-sharp"
+                  size={22}
+                  color={applied === "dark" ? "#F1F5F9" : "#0F1828"}
+                />
+              </Pressable>
+
+              <Text
+                className="ml-2 text-2xl font-bold"
+                style={{ color: applied === "dark" ? "#F1F5F9" : "#0F1828" }}
+              >
+                Settings
+              </Text>
+            </View>
+
+            {/* Logout Button - Top Right */}
             <Pressable
-              onPress={() => navigation.goBack()}
+              onPress={() => {
+                try {
+                  Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: "Confirm Logout",
+                    textBody: "Are you sure you want to logout?",
+                    button: "Yes, Logout",
+                    onPressButton: async () => {
+                      try {
+                        if (auth) {
+                          // Hide confirmation dialog first
+                          Dialog.hide();
+                          
+                          // Show success message
+                          Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            title: "Success",
+                            textBody: "Logged out successfully",
+                            button: "close",
+                          });
+
+                          // Wait for success message to show, then logout and navigate
+                          setTimeout(async () => {
+                            try {
+                              await auth.signOut();
+                              console.log("User logged out successfully");
+                              
+                              // Hide success dialog and let App.tsx handle navigation
+                              Dialog.hide();
+                              // The App.tsx will automatically navigate to login screens
+                              // because userId is now null in AuthProvider
+                            } catch (error) {
+                              console.error("Logout error:", error);
+                              Dialog.hide();
+                              Dialog.show({
+                                type: ALERT_TYPE.DANGER,
+                                title: "Error",
+                                textBody: "Failed to logout. Please try again.",
+                                button: "Close",
+                              });
+                            }
+                          }, 500);
+                        }
+                      } catch (error) {
+                        console.error("Logout error:", error);
+                        Dialog.show({
+                          type: ALERT_TYPE.DANGER,
+                          title: "Error",
+                          textBody: "Failed to logout. Please try again.",
+                          button: "Close",
+                        });
+                      }
+                    },
+                  });
+                } catch (error) {
+                  console.error("Dialog error:", error);
+                  Dialog.show({
+                    type: ALERT_TYPE.DANGER,
+                    title: "Error",
+                    textBody: "Something went wrong. Please try again.",
+                    button: "Close",
+                  });
+                }
+              }}
               className="w-12 h-12 rounded-2xl items-center justify-center active:scale-95 transition-all"
+              style={{
+                backgroundColor: applied === "dark" ? "#0F172A" : "#FEE2E2",
+                shadowColor: applied === "dark" ? "#000" : "#fca5a5",
+                shadowOpacity: 0.2,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
             >
-              <Ionicons
-                name="arrow-back-sharp"
-                size={22}
-                color={applied === "dark" ? "#F1F5F9" : "#0F1828"}
+              <Feather
+                name="log-out"
+                size={20}
+                color={applied === "dark" ? "#EF4444" : "#DC2626"}
               />
             </Pressable>
-
-            <Text
-              className="ml-2 text-2xl font-bold"
-              style={{ color: applied === "dark" ? "#F1F5F9" : "#0F1828" }}
-            >
-              Settings
-            </Text>
           </View>
+        </View>
 
-          {/* Logout Button - Top Right */}
-          <Pressable
-            onPress={() => console.log("Logout Pressed")}
-            className="w-12 h-12 rounded-2xl items-center justify-center active:scale-95 transition-all"
+        {/* Animated Background Orbs */}
+        <View className="absolute inset-0 overflow-hidden pointer-events-none">
+          <Animated.View
             style={{
-              backgroundColor: applied === "dark" ? "#0F172A" : "#FEE2E2", // Dark navy vs soft red tint
-              shadowColor: applied === "dark" ? "#000" : "#fca5a5",
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
-              elevation: 3,
+              transform: [{ scale: orb1Scale }],
+              backgroundColor:
+                applied === "dark"
+                  ? "rgba(59,130,246,0.12)"
+                  : "rgba(59,130,246,0.06)",
+            }}
+            className="absolute w-80 h-80 rounded-full -top-32 -left-32"
+          />
+          <Animated.View
+            style={{
+              transform: [{ scale: orb2Scale }],
+              backgroundColor:
+                applied === "dark"
+                  ? "rgba(168,85,247,0.1)"
+                  : "rgba(168,85,247,0.04)",
+            }}
+            className="absolute w-72 h-72 rounded-full -bottom-24 -right-24"
+          />
+        </View>
+
+        {/* Main Content - Fixed Layout (No Scroll) */}
+        <View className="flex-1 px-6 pt-4">
+          {/* Profile Section */}
+          <Pressable
+            onPress={() => {
+              navigation.navigate("ProfileScreen" as never);
+            }}
+            className={`flex-row items-center rounded-3xl p-6 mb-8 ${
+              applied === "dark" ? "bg-[#152033]" : "bg-white"
+            }`}
+            style={{
+              shadowColor: applied === "dark" ? "#000" : "#4A61D1",
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.15,
+              shadowRadius: 12,
+              elevation: 8,
             }}
           >
+            <View className="relative">
+              <Image
+                source={{
+                  uri: "https://iamlaky.online/assets/profile.jpg",
+                }}
+                className="w-20 h-20 rounded-2xl"
+              />
+              <View className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full items-center justify-center">
+                <Feather name="edit-2" size={12} color="white" />
+              </View>
+            </View>
+            <View className="ml-5 flex-1">
+              <Text className="text-xl font-bold text-slate-800 dark:text-slate-100">
+                Lakshitha Madumal
+              </Text>
+              <Text className="text-slate-500 dark:text-slate-400 text-base mt-1">
+                +94 71 265 4117
+              </Text>
+              <Text className="text-slate-400 dark:text-slate-500 text-sm mt-1">
+                Tap to edit profile
+              </Text>
+            </View>
             <Feather
-              name="log-out"
+              name="chevron-right"
               size={20}
-              color={applied === "dark" ? "#EF4444" : "#DC2626"} // soft red for dark, strong red for light
+              color={applied === "dark" ? "#64748b" : "#94a3b8"}
             />
           </Pressable>
-        </View>
-      </View>
 
-      {/* Animated Background Orbs */}
-      <View className="absolute inset-0 overflow-hidden pointer-events-none">
-        <Animated.View
-          style={{
-            transform: [{ scale: orb1Scale }],
-            backgroundColor:
-              applied === "dark"
-                ? "rgba(59,130,246,0.12)"
-                : "rgba(59,130,246,0.06)",
-          }}
-          className="absolute w-80 h-80 rounded-full -top-32 -left-32"
-        />
-        <Animated.View
-          style={{
-            transform: [{ scale: orb2Scale }],
-            backgroundColor:
-              applied === "dark"
-                ? "rgba(168,85,247,0.1)"
-                : "rgba(168,85,247,0.04)",
-          }}
-          className="absolute w-72 h-72 rounded-full -bottom-24 -right-24"
-        />
-      </View>
+          {/* Theme Section */}
+          <View className="mb-8">
+            <Text className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4">
+              Appearance
+            </Text>
 
-      {/* Main Content - Fixed Layout (No Scroll) */}
-      <View className="flex-1 px-6 pt-4">
-        {/* Profile Section */}
-        <Pressable
-          onPress={() => {
-            navigation.navigate("ProfileScreen" as never);
-          }}
-          className={`flex-row items-center rounded-3xl p-6 mb-8 ${
-            applied === "dark" ? "bg-[#152033]" : "bg-white"
-          }`}
-          style={{
-            shadowColor: applied === "dark" ? "#000" : "#4A61D1",
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.15,
-            shadowRadius: 12,
-            elevation: 8,
-          }}
-        >
-          <View className="relative">
-            <Image
-              source={{
-                uri: "https://iamlaky.online/assets/profile.jpg",
-              }}
-              className="w-20 h-20 rounded-2xl"
-            />
-            <View className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full items-center justify-center">
-              <Feather name="edit-2" size={12} color="white" />
+            <View className="rounded-3xl overflow-hidden">
+              <ThemeOption
+                label="Light Mode"
+                selected={preference === "light"}
+                onPress={() => setPreference("light")}
+                emoji="☀️"
+                description="Bright and clean"
+              />
+              <View className="h-px bg-slate-200 dark:bg-slate-700" />
+              <ThemeOption
+                label="Dark Mode"
+                selected={preference === "dark"}
+                onPress={() => setPreference("dark")}
+                emoji="🌙"
+                description="Easy on the eyes"
+              />
+              <View className="h-px bg-slate-200 dark:bg-slate-700" />
+              <ThemeOption
+                label="System Default"
+                selected={preference === "system"}
+                onPress={() => setPreference("system")}
+                emoji="🖥️"
+                description="Follow device setting"
+              />
             </View>
           </View>
-          <View className="ml-5 flex-1">
-            <Text className="text-xl font-bold text-slate-800 dark:text-slate-100">
-              Lakshitha Madumal
-            </Text>
-            <Text className="text-slate-500 dark:text-slate-400 text-base mt-1">
-              +94 71 265 4117
-            </Text>
-            <Text className="text-slate-400 dark:text-slate-500 text-sm mt-1">
-              Tap to edit profile
-            </Text>
-          </View>
-          <Feather
-            name="chevron-right"
-            size={20}
-            color={applied === "dark" ? "#64748b" : "#94a3b8"}
-          />
-        </Pressable>
 
-        {/* Theme Section */}
-        <View className="mb-8">
-          <Text className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4">
-            Appearance
-          </Text>
+          {/* Pro Version Banner with Blue Verify Badge */}
+          <View className="mb-8 relative overflow-hidden rounded-3xl">
+            {/* Banner Background Orbs */}
+            <View className="absolute inset-0">
+              <Animated.View
+                style={{
+                  transform: [{ scale: orb1Scale }],
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                }}
+                className="absolute w-36 h-36 rounded-full -top-12 -left-12"
+              />
+              <Animated.View
+                style={{
+                  transform: [{ scale: orb2Scale }],
+                  backgroundColor: "rgba(255,255,255,0.15)",
+                }}
+                className="absolute w-28 h-28 rounded-full bottom-4 right-4"
+              />
+            </View>
 
-          <View className="rounded-3xl overflow-hidden">
-            <ThemeOption
-              label="Light Mode"
-              selected={preference === "light"}
-              onPress={() => setPreference("light")}
-              emoji="☀️"
-              description="Bright and clean"
-            />
-            <View className="h-px bg-slate-200 dark:bg-slate-700" />
-            <ThemeOption
-              label="Dark Mode"
-              selected={preference === "dark"}
-              onPress={() => setPreference("dark")}
-              emoji="🌙"
-              description="Easy on the eyes"
-            />
-            <View className="h-px bg-slate-200 dark:bg-slate-700" />
-            <ThemeOption
-              label="System Default"
-              selected={preference === "system"}
-              onPress={() => setPreference("system")}
-              emoji="🖥️"
-              description="Follow device setting"
-            />
-          </View>
-        </View>
-
-        {/* Pro Version Banner with Blue Verify Badge */}
-        <View className="mb-8 relative overflow-hidden rounded-3xl">
-          {/* Banner Background Orbs */}
-          <View className="absolute inset-0">
-            <Animated.View
-              style={{
-                transform: [{ scale: orb1Scale }],
-                backgroundColor: "rgba(255,255,255,0.2)",
-              }}
-              className="absolute w-36 h-36 rounded-full -top-12 -left-12"
-            />
-            <Animated.View
-              style={{
-                transform: [{ scale: orb2Scale }],
-                backgroundColor: "rgba(255,255,255,0.15)",
-              }}
-              className="absolute w-28 h-28 rounded-full bottom-4 right-4"
-            />
-          </View>
-
-          <LinearGradient
-            colors={
-              applied === "dark"
-                ? ["#0ea5e9", "#2563eb"]
-                : ["#06b6d4", "#3b82f6"]
-            }
-            className="p-6"
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
-            <View className="flex-row items-start justify-between">
-              <View className="flex-1 pr-4">
-                <View className="flex-row items-center mb-2">
-                  <View className="w-6 h-6 bg-white rounded-full items-center justify-center mr-2">
-                    <Feather name="check" size={14} color="#3b82f6" />
-                  </View>
-                  <Text className="text-white font-bold text-lg">
-                    Verified Pro
-                  </Text>
-                </View>
-                <Text className="text-blue-100 text-sm mb-4">
-                  Unlock exclusive features, blue verification badge, and
-                  premium support
-                </Text>
-                <View className="flex-row items-center space-x-3">
-                  <View className="flex-row items-center">
-                    <Feather name="check-circle" size={14} color="#bbf7d0" />
-                    <Text className="text-blue-100 text-xs ml-1">
-                      Blue Badge
+            <LinearGradient
+              colors={
+                applied === "dark"
+                  ? ["#0ea5e9", "#2563eb"]
+                  : ["#06b6d4", "#3b82f6"]
+              }
+              className="p-6"
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
+              <View className="flex-row items-start justify-between">
+                <View className="flex-1 pr-4">
+                  <View className="flex-row items-center mb-2">
+                    <View className="w-6 h-6 bg-white rounded-full items-center justify-center mr-2">
+                      <Feather name="check" size={14} color="#3b82f6" />
+                    </View>
+                    <Text className="text-white font-bold text-lg">
+                      Verified Pro
                     </Text>
                   </View>
-                  <View className="flex-row items-center">
-                    <Feather name="check-circle" size={14} color="#bbf7d0" />
-                    <Text className="text-blue-100 text-xs ml-1">No Ads</Text>
-                  </View>
-                  <View className="flex-row items-center">
-                    <Feather name="check-circle" size={14} color="#bbf7d0" />
-                    <Text className="text-blue-100 text-xs ml-1">Premium</Text>
+                  <Text className="text-blue-100 text-sm mb-4">
+                    Unlock exclusive features, blue verification badge, and
+                    premium support
+                  </Text>
+                  <View className="flex-row items-center space-x-3">
+                    <View className="flex-row items-center">
+                      <Feather name="check-circle" size={14} color="#bbf7d0" />
+                      <Text className="text-blue-100 text-xs ml-1">
+                        Blue Badge
+                      </Text>
+                    </View>
+                    <View className="flex-row items-center">
+                      <Feather name="check-circle" size={14} color="#bbf7d0" />
+                      <Text className="text-blue-100 text-xs ml-1">No Ads</Text>
+                    </View>
+                    <View className="flex-row items-center">
+                      <Feather name="check-circle" size={14} color="#bbf7d0" />
+                      <Text className="text-blue-100 text-xs ml-1">
+                        Premium
+                      </Text>
+                    </View>
                   </View>
                 </View>
+                <View className="bg-white rounded-2xl px-5 py-3 active:scale-95">
+                  <Text className="text-blue-600 font-bold text-sm">
+                    UPGRADE
+                  </Text>
+                </View>
               </View>
-              <View className="bg-white rounded-2xl px-5 py-3 active:scale-95">
-                <Text className="text-blue-600 font-bold text-sm">UPGRADE</Text>
-              </View>
-            </View>
-          </LinearGradient>
-        </View>
+            </LinearGradient>
+          </View>
 
-        {/* Footer */}
-        <View className="items-center justify-center mt-8 pb-6">
-          <Text className="text-slate-400 dark:text-slate-500 text-sm mb-1">
-            Designed and developed by
-          </Text>
-          <Text className="text-blue-500 dark:text-blue-400 font-bold text-lg">
-            {process.env.EXPO_PUBLIC_APP_OWNER}
-          </Text>
-          <Text className="text-slate-400 dark:text-slate-500 text-xs mt-2">
-            Version {process.env.EXPO_PUBLIC_APP_VERSION}
-          </Text>
+          {/* Footer */}
+          <View className="items-center justify-center mt-8 pb-6">
+            <Text className="text-slate-400 dark:text-slate-500 text-sm mb-1">
+              Designed and developed by
+            </Text>
+            <Text className="text-blue-500 dark:text-blue-400 font-bold text-lg">
+              {process.env.EXPO_PUBLIC_APP_OWNER}
+            </Text>
+            <Text className="text-slate-400 dark:text-slate-500 text-xs mt-2">
+              Version {process.env.EXPO_PUBLIC_APP_VERSION}
+            </Text>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </AlertNotificationRoot>
   );
 }
 

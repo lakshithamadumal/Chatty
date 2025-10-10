@@ -43,7 +43,7 @@ const Stack = createNativeStackNavigator<RootStack>();
 function Chatty() {
   const auth = useContext(AuthContext);
   return (
-    <WebSocketProvider userId={1}>
+    <WebSocketProvider userId={auth ? Number(auth.userId) : 0}>
       <ThemeProvider>
         <UserRegistrationProvider>
           <NavigationContainer>
@@ -51,19 +51,44 @@ function Chatty() {
               initialRouteName="SplashScreen"
               screenOptions={{ headerShown: false }}
             >
-              <Stack.Screen name="SplashScreen" component={SplashScreen} />
-              <Stack.Screen name="InfoScreen" component={InfoScreen} />
-              <Stack.Screen name="ContactScreen" component={ContactScreen} />
-              <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-              <Stack.Screen name="LoginScreen" component={LoginScreen} />
-              <Stack.Screen name="HomeScreen" component={HomeTabs} />
-              <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-              <Stack.Screen name="SettingScreen" component={SettingScreen} />
-              <Stack.Screen name="NewChatScreen" component={NewChatScreen} />
-              <Stack.Screen
-                name="SingleChatScreen"
-                component={SingleChatScreen}
-              />
+              {auth?.isLoading ? (
+                <Stack.Screen name="SplashScreen" component={SplashScreen} />
+              ) : auth?.userId === null ? (
+                // User not sign up
+                <>
+                  <Stack.Screen name="InfoScreen" component={InfoScreen} />
+                  <Stack.Screen
+                    name="ContactScreen"
+                    component={ContactScreen}
+                  />
+                  <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+                  <Stack.Screen
+                    name="LoginScreen"
+                    component={LoginScreen}
+                  />
+                </>
+              ) : (
+                // When user sign up completed
+                <>
+                  <Stack.Screen name="HomeScreen" component={HomeTabs} />
+                  <Stack.Screen
+                    name="ProfileScreen"
+                    component={ProfileScreen}
+                  />
+                  <Stack.Screen
+                    name="SettingScreen"
+                    component={SettingScreen}
+                  />
+                  <Stack.Screen
+                    name="NewChatScreen"
+                    component={NewChatScreen}
+                  />
+                  <Stack.Screen
+                    name="SingleChatScreen"
+                    component={SingleChatScreen}
+                  />
+                </>
+              )}
             </Stack.Navigator>
           </NavigationContainer>
         </UserRegistrationProvider>
