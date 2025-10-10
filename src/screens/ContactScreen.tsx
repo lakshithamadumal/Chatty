@@ -322,24 +322,22 @@ export default function ContactScreen() {
 
                     if (response.status && response.exists) {
                       // User exists - show login success dialog
-                      Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        title: "Success",
-                        textBody: "Welcome! Logged in",
-                        button: "close",
-                        onHide: () => {
-                          // Save user ID to AuthProvider
-                          if (response.userId) {
-                            signUp(response.userId.toString());
-                          }
-                          // Navigate to Home
-                          navigation.replace("HomeScreen");
-                        },
-                      });
+                        Dialog.show({
+                          type: ALERT_TYPE.SUCCESS,
+                          title: "Success",
+                          textBody: "Welcome! Logged in",
+                          button: "close",
+                          onHide: () => {
+                            // Save user ID to AuthProvider - this will automatically navigate to HomeScreen
+                            if (response.userId) {
+                              signUp(response.userId.toString());
+                            }
+                          },
+                        });
 
-                      setTimeout(() => {
-                        Dialog.hide();
-                      }, 2000);
+                        setTimeout(() => {
+                          Dialog.hide();
+                        }, 2000);
                     } else {
                       // User doesn't exist - proceed to sign up
                       navigation.navigate("SignUpScreen");
