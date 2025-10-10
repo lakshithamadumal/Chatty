@@ -18,9 +18,11 @@ import NewChatScreen from "./src/screens/NewChatScreen";
 import { useWebSocketPing } from "./src/socket/UseWebSocketPing";
 import { AuthContext, AuthProvider } from "./src/components/AuthProvider";
 import { useContext } from "react";
+import InfoScreen from "./src/screens/InfoScreen";
 
 export type RootStack = {
   SplashScreen: undefined;
+  InfoScreen: undefined;
   ContactScreen: undefined;
   SignUpScreen: undefined;
   LoginScreen: undefined;
@@ -46,41 +48,22 @@ function Chatty() {
         <UserRegistrationProvider>
           <NavigationContainer>
             <Stack.Navigator
-              initialRouteName="SplashScreen"
+              initialRouteName="HomeScreen"
               screenOptions={{ headerShown: false }}
             >
-              {auth?.isLoading ? (
-                <Stack.Screen name="SplashScreen" component={SplashScreen} />
-              ) : auth?.userId === null ? (
-                <>
-                  <Stack.Screen
-                    name="ContactScreen"
-                    component={ContactScreen}
-                  />
-                  <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-                  <Stack.Screen name="LoginScreen" component={LoginScreen} />
-                </>
-              ) : (
-                <>
-                  <Stack.Screen name="HomeScreen" component={HomeTabs} />
-                  <Stack.Screen
-                    name="ProfileScreen"
-                    component={ProfileScreen}
-                  />
-                  <Stack.Screen
-                    name="SettingScreen"
-                    component={SettingScreen}
-                  />
-                  <Stack.Screen
-                    name="NewChatScreen"
-                    component={NewChatScreen}
-                  />
-                  <Stack.Screen
-                    name="SingleChatScreen"
-                    component={SingleChatScreen}
-                  />
-                </>
-              )}
+              <Stack.Screen name="SplashScreen" component={SplashScreen} />
+              <Stack.Screen name="InfoScreen" component={InfoScreen} />
+              <Stack.Screen name="ContactScreen" component={ContactScreen} />
+              <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
+              <Stack.Screen name="HomeScreen" component={HomeTabs} />
+              <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+              <Stack.Screen name="SettingScreen" component={SettingScreen} />
+              <Stack.Screen name="NewChatScreen" component={NewChatScreen} />
+              <Stack.Screen
+                name="SingleChatScreen"
+                component={SingleChatScreen}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </UserRegistrationProvider>

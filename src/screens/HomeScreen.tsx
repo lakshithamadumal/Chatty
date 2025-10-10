@@ -24,6 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useChatList } from "../socket/UseChatList";
 import InitialsAvatar from "../components/InitialsAvatar";
 import { formatChatTime, formatChatListTime } from "../Util/DateFomatter";
+import { useWebSocketPing } from "../socket/UseWebSocketPing";
 
 interface ChatItem {
   id: string;
@@ -37,6 +38,9 @@ interface ChatItem {
 type HomeProps = NativeStackNavigationProp<RootStack, "HomeScreen">;
 
 export default function HomeScreen() {
+
+  useWebSocketPing(4000);
+
   const navigation = useNavigation<HomeProps>();
   const { applied } = useTheme();
   const [search, setSearch] = useState("");
