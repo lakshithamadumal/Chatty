@@ -30,6 +30,7 @@ import {
 } from "react-native-alert-notification";
 import { checkPhoneNumber } from "../api/PhoneVerificationService";
 import { useAuth } from "../components/AuthProvider";
+import { UserDetails } from "../api/UserDetailsService";
 
 type ContactProps = NativeStackNavigationProp<RootStack, "ContactScreen">;
 
@@ -328,8 +329,21 @@ export default function ContactScreen() {
                           textBody: "Welcome! Logged in",
                           button: "close",
                           onHide: () => {
-                            // Save user ID to AuthProvider - this will automatically navigate to HomeScreen
-                            if (response.userId) {
+                            // Save user ID and details to AuthProvider - this will automatically navigate to HomeScreen
+                            if (response.userId && response.user) {
+                              const userDetails: UserDetails = {
+                                id: response.userId,
+                                firstName: response.user.firstName || "",
+                                lastName: response.user.lastName || "",
+                                countryCode: response.user.countryCode || "",
+                                contactNo: response.user.contactNo || "",
+                                profileImage: response.user.profileImage || undefined,
+                                status: response.user.status || undefined,
+                                createdAt: response.user.createdAt || undefined,
+                                updatedAt: response.user.updatedAt || undefined,
+                              };
+                              signUp(response.userId.toString(), userDetails);
+                            } else if (response.userId) {
                               signUp(response.userId.toString());
                             }
                           },

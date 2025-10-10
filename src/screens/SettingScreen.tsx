@@ -18,6 +18,7 @@ import "../../global.css";
 import InitialsAvatar from "../components/InitialsAvatar";
 import { AuthContext } from "../components/AuthProvider";
 import { useUserRegistration } from "../components/UserContext";
+import { UserDetails } from "../api/UserDetailsService";
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
@@ -34,6 +35,9 @@ export default function SettingScreen() {
   const { applied, preference, setPreference } = useTheme();
   const { userData } = useUserRegistration();
   const auth = useContext(AuthContext);
+  
+  // Get user details from AuthProvider
+  const userDetails: UserDetails | null = auth?.userDetails || null;
 
   // Orb animations
   const orb1Scale = useRef(new Animated.Value(1)).current;
@@ -237,22 +241,29 @@ export default function SettingScreen() {
             }}
           >
             <View className="relative">
-              <Image
-                source={{
-                  uri: "https://iamlaky.online/assets/profile.jpg",
-                }}
-                className="w-20 h-20 rounded-2xl"
-              />
+              {userDetails?.profileImage ? (
+                <Image
+                  source={{
+                    uri: userDetails.profileImage,
+                  }}
+                  className="w-20 h-20 rounded-2xl"
+                />
+              ) : (
+                <InitialsAvatar
+                  name={userDetails ? `${userDetails.firstName} ${userDetails.lastName}` : "User"}
+                  size={80}
+                />
+              )}
               <View className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full items-center justify-center">
                 <Feather name="edit-2" size={12} color="white" />
               </View>
             </View>
             <View className="ml-5 flex-1">
               <Text className="text-xl font-bold text-slate-800 dark:text-slate-100">
-                Lakshitha Madumal
+                {userDetails ? `${userDetails.firstName} ${userDetails.lastName}` : "User"}
               </Text>
               <Text className="text-slate-500 dark:text-slate-400 text-base mt-1">
-                +94 71 265 4117
+                {userDetails ? `${userDetails.countryCode} ${userDetails.contactNo}` : "No contact info"}
               </Text>
               <Text className="text-slate-400 dark:text-slate-500 text-sm mt-1">
                 Tap to edit profile
