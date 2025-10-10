@@ -360,14 +360,6 @@ export default function ProfileScreen() {
                 {user.contactNumber}
               </Text>
             </View>
-
-            {/* Member Since (moved out of 'Additional Information') */}
-            <Text
-              className="text-xs mt-3"
-              style={{ color: applied === "dark" ? "#94A3B8" : "#6B7280" }}
-            >
-              Member since January 2024
-            </Text>
           </View>
         </View>
 
