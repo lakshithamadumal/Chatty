@@ -12,7 +12,7 @@ import {
   Easing,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useTheme } from "../theme/ThemeProvider";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -21,6 +21,9 @@ import * as ImagePicker from "expo-image-picker";
 import "../../global.css";
 import { RootStack } from "../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AuthContext } from "../components/AuthProvider";
+import { UserDetails } from "../api/UserDetailsService";
+import InitialsAvatar from "../components/InitialsAvatar";
 
 type ProfileProps = NativeStackNavigationProp<RootStack, "ProfileScreen">;
 
@@ -28,17 +31,33 @@ export default function ProfileScreen() {
   const navigation = useNavigation<ProfileProps>();
 
   const { applied } = useTheme();
+  const auth = useContext(AuthContext);
+  
+  // Get user details from AuthProvider
+  const userDetails: UserDetails | null = auth?.userDetails || null;
 
-  // User state
+  // User state - initialize with real data or defaults
   const [user, setUser] = useState({
-    firstName: "Lakshitha",
-    lastName: "Madumal",
-    contactNumber: "+94 71 265 4117",
-    profilePicture: "https://iamlaky.online/assets/profile.jpg",
+    firstName: userDetails?.firstName || "",
+    lastName: userDetails?.lastName || "",
+    contactNumber: userDetails ? `${userDetails.countryCode} ${userDetails.contactNo}` : "",
+    profilePicture: userDetails?.profileImage || "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Update user state when userDetails change
+  useEffect(() => {
+    if (userDetails) {
+      setUser({
+        firstName: userDetails.firstName || "",
+        lastName: userDetails.lastName || "",
+        contactNumber: `${userDetails.countryCode} ${userDetails.contactNo}`,
+        profilePicture: userDetails.profileImage || "",
+      });
+    }
+  }, [userDetails]);
 
   // Subtle background motion
   const orb1 = new Animated.Value(1);
@@ -135,13 +154,15 @@ export default function ProfileScreen() {
 
   // Handle cancel edit
   const handleCancelEdit = () => {
-    // Reset to original values (in a real app, you might want to keep the original data separately)
-    setUser({
-      firstName: "Lakshitha",
-      lastName: "Madumal",
-      contactNumber: "+94 71 265 4117",
-      profilePicture: "https://i.pravatar.cc/150?img=12",
-    });
+    // Reset to original values from userDetails
+    if (userDetails) {
+      setUser({
+        firstName: userDetails.firstName || "",
+        lastName: userDetails.lastName || "",
+        contactNumber: `${userDetails.countryCode} ${userDetails.contactNo}`,
+        profilePicture: userDetails.profileImage || "",
+      });
+    }
     setIsEditing(false);
   };
 
@@ -251,10 +272,18 @@ export default function ProfileScreen() {
         {/* Profile Picture Section */}
         <View className="items-center mb-8">
           <View className="relative">
-            <Image
-              source={{ uri: user.profilePicture }}
-              className="w-32 h-32 rounded-3xl"
-            />
+            {user.profilePicture ? (
+              <Image
+                source={{ uri: user.profilePicture }}
+                className="w-32 h-32 rounded-3xl"
+              />
+            ) : (
+              <InitialsAvatar
+                name={`${user.firstName} ${user.lastName}`}
+                size={128}
+                className="rounded-3xl"
+              />
+            )}
             {isEditing && (
               <Pressable
                 onPress={handleChangeProfilePicture}
