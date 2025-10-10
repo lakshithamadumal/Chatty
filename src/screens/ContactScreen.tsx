@@ -28,6 +28,8 @@ import {
   AlertNotificationRoot,
   Dialog,
 } from "react-native-alert-notification";
+import { checkPhoneNumber } from "../api/PhoneVerificationService";
+import { useAuth } from "../components/AuthProvider";
 
 type ContactProps = NativeStackNavigationProp<RootStack, "ContactScreen">;
 
@@ -37,10 +39,12 @@ export default function ContactScreen() {
   const [countryCode, setCountryCode] = useState<CountryCode>("LK");
   const [country, setCountry] = useState<Country | null>(null);
   const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { applied } = useTheme();
 
   const { userData, setUserData } = useUserRegistration();
+  const { signUp } = useAuth();
 
   const orb1Scale = useRef(new Animated.Value(1)).current;
   const orb2Scale = useRef(new Animated.Value(1)).current;
@@ -283,7 +287,7 @@ export default function ContactScreen() {
 
             <View className="mt-16 relative">
               <Pressable
-                onPress={() => {
+                onPress={async () => {
                   const countryCodeError = isValidCountryCode(
                     userData.countryCode
                   );
@@ -308,13 +312,63 @@ export default function ContactScreen() {
                     return;
                   }
 
-                  navigation.navigate("SignUpScreen");
+                  setLoading(true);
+
+                  try {
+                    const response = await checkPhoneNumber(
+                      userData.countryCode,
+                      userData.contactNo
+                    );
+
+                    if (response.status && response.exists) {
+                      // User exists - show login success dialog
+                      Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        title: "Success",
+                        textBody: "Welcome! Logged in",
+                        button: "close",
+                        onHide: () => {
+                          // Save user ID to AuthProvider
+                          if (response.userId) {
+                            signUp(response.userId.toString());
+                          }
+                          // Navigate to Home
+                          navigation.replace("HomeScreen");
+                        },
+                      });
+
+                      setTimeout(() => {
+                        Dialog.hide();
+                      }, 2000);
+                    } else {
+                      // User doesn't exist - proceed to sign up
+                      navigation.navigate("SignUpScreen");
+                    }
+                  } catch (error) {
+                    Dialog.show({
+                      type: ALERT_TYPE.DANGER,
+                      title: "Error",
+                      textBody: "Please try again.",
+                      button: "close",
+                    });
+                  } finally {
+                    setLoading(false);
+                  }
                 }}
-                className="h-14 rounded-full bg-blue-600 items-center justify-center shadow-lg shadow-blue-500/30"
+                disabled={loading}
+                className={`h-14 rounded-full items-center justify-center shadow-lg shadow-blue-500/30 ${
+                  loading ? "bg-blue-600" : "bg-blue-600"
+                }`}
               >
-                <Text className="text-white font-semibold text-base">
-                  Continue
-                </Text>
+                {loading ? (
+                  <Text className="text-white font-semibold text-base">
+                    Loading...
+                  </Text>
+                ) : (
+                  <Text className="text-white font-semibold text-base">
+                    Continue
+                  </Text>
+                )}
               </Pressable>
 
               <Animated.View
